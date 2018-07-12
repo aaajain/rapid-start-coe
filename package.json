@@ -1,0 +1,48 @@
+{
+  "name": "rapid-start",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "assert": "1.4.1",
+    "async": "^1.5.0",
+    "body-parser": "^1.17.2",
+    "chai": "4.1.2",
+    "chai-http": "^2.0.1",
+    "express": "^4.15.3",
+    "glob": "^7.1.2",
+    "log4js": "0.6.38",
+    "mocha": "5.1.0",
+    "multer": "^1.3.0",
+    "nyc": "^11.7.1",
+    "request": "2.81.0",
+    "sinon": "4.5.0"
+  },
+  "scripts": {
+    "cover": "node_modules/nyc/bin/nyc.js node_modules/mocha/bin/mocha --compilers js:node_modules/babel-cli/node_modules/babel-core/register  test/*.js",
+    "test": "mocha --exit",
+    "mochaExit": "exit 1"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 1000,
+    "statements": 99,
+    "functions": 99,
+    "branches": 99,
+    "include": [
+      "routes/DistinctNDC.js",
+      "routes/FollowUpTaskDetails.js"
+    ],
+    "ignore-class-method": "methodToIgnore",
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "extension": [
+      ".js"
+    ],
+    "cache": true,
+    "all": true,
+    "report-dir": "coverage"
+  }
+}
