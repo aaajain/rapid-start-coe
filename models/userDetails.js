@@ -25,11 +25,6 @@ var userSchema = new mongoose.Schema({
 });
 
 var roleSchema = new mongoose.Schema({
-  role_id: {
-    type: Number,
-    unique: true,
-    required: true,
-  },
   role_name: {
     type: String,
     unique: true,
@@ -43,7 +38,24 @@ var methods =
 	createAdminRole: function(callback){
 		var conn = mongo.client;
 		const role_admin = conn.model('role_master', roleSchema);
-		const admin = new role_admin({ role_id: 1,role_name:"admin" });
+		const admin = new role_admin({role_name:"admin" });
+		admin.save(function (err) {
+			 if(err)
+			 {
+			 	console.log(err.stack);
+			 	callback(err,null);
+			 }
+			 else
+			 {
+			 	console.log('roles created');
+			 	callback(null,true);
+			 }
+		});
+	},
+	createAdminUser: function(callback){
+		var conn = mongo.client;
+		const admin_user= conn.model('user_master', userSchema);
+		const admin = new admin_user({ role_id: 1,role_name:"admin" });
 		admin.save(function (err) {
 			 if(err)
 			 {
