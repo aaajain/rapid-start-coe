@@ -1,11 +1,12 @@
-const mongoose = require('mongoose');
-var uri = "mongodb://localhost:27017/test";
+var mongoose = require('mongoose');
+var settings = require("../config/settings");
+var uri = settings.mongo.url;
 
-const options = {
+var options = {
   autoIndex: false, // Don't build indexes
   reconnectTries: Number.THREE, // Never stop trying to reconnect
   reconnectInterval: 500, // Reconnect every 500ms
-  poolSize: 1, // Maintain up to 10 socket connections
+  poolSize: 10, // Maintain up to 10 socket connections
   // If not connected, return errors immediately rather than waiting for reconnect
   bufferMaxEntries: 0,
   connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
@@ -23,48 +24,16 @@ const options = {
 }*/
 
 
-var userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true
-  },
-  username: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  role:{
-  	type: Number,
-    required: true,
-  }
-});
+/*module.exports.connect = function(callback)
+{
+	return mongoose.createConnection(uri,options,callback);
+}*/
 
-var roleSchema = new mongoose.Schema({
-  role_id: {
-    type: Number,
-    unique: true,
-    required: true,
-  },
-  role_name: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true
-  },
-});
+/*mongoose.createConnection(uri, options,function(err,db)
+{
 
-var conn;
- mongoose.createConnection(uri, options,function(err,db)
-	{
-		console.log(db);
-	});
+	console.log(db);
+});*/
 /*conn.on('error', console.error.bind(console, 'connection error:'));
             conn.once('open', function callback() {
                 console.log('db connection open');
@@ -74,4 +43,26 @@ var conn;
 
 
 //console.log(conn.prototype.db);
+
+var connection =
+{
+	createConnection:function(callback)
+	{
+		mongoose.createConnection(uri,options,function(err,db){
+			if(err)
+			{
+				console.log(err.stack);
+				callback(err,null);
+			}
+			else
+			{
+				module.exports.client = db;
+				callback(null,db);
+			}
+		});
+	}
+}
+
+module.exports.connection = connection;
+
 

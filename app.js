@@ -5,6 +5,8 @@ var settings =require('./config/settings.js');
 var queryUtils = require('./dao/query-utils.js');
 var async = require('async');
 var logger = require('./config/logger.js').getLogger('app.js');
+var mongo = require('./dao/mongo-connect.js');
+var userDetails = require('./models/userDetails.js');
 const app = express();
 app.use(bodyParser.json());
 /* Added below for CMS Rebate CR for request payload more that 0.1 MB*/
@@ -43,25 +45,35 @@ allRoutes.forEach(function(routes) {
 /*app.listen(3000, function clearMajorityCheckBasedOnWQ() {
   console.log('Example app listening on port 3000!')
 });*/
-
-async.parallel({
-    masterDataMap: function(callback) {
-    	console.log('query for master');
-        callback(null, true);
-    }
-}, function(err, results) {
-    // results is now equals to: {one: 1, two: 2}
-    if(!err)
-    {
-    	var port = settings.appPort;
-    	var server = http.createServer(app); 
-		var setRequestTimeOut = server.listen(port,function(err)
-		{
-			if(err) throw err;
-			console.log('app listening on port ' + port + '!')
-		});
-		setRequestTimeOut.timeout = settings.timeOut; 
-	}
+mongo.connection.createConnection(function(err,db)
+{
+	console.log('db connect state '+mongo.client.readyState);
+	async.parallel({
+	    createAdminRole: function(callback) {
+	    	userDetails.methods.createAdminRole(function(err,data){
+	    		if(err)
+	    		{
+	    			callback(err, null);
+	    		}
+	    		else
+	    		{
+	    			callback(null, true);
+	    		}
+	    	});
+	    }
+	}, function(err, results) {
+	    // results is now equals to: {one: 1, two: 2}
+	    if(!err)
+	    {
+	    	var port = settings.appPort;
+	    	var server = http.createServer(app); 
+			var setRequestTimeOut = server.listen(port,function(err)
+			{
+				if(err) throw err;
+				console.log('app listening on port ' + port + '!')
+			});
+			setRequestTimeOut.timeout = settings.timeOut; 
+		}
+	});
 });
-
 
