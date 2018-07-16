@@ -39,18 +39,29 @@ var methods =
 		var conn = mongo.client;
 		const role_admin = conn.model('role_master', roleSchema);
 		const admin = new role_admin({role_name:"admin" });
-		admin.save(function (err) {
-			 if(err)
-			 {
-			 	console.log(err.stack);
-			 	callback(err,null);
-			 }
-			 else
-			 {
-			 	console.log('roles created');
-			 	callback(null,true);
-			 }
-		});
+		conn.collection("role_masters").find({}, { role: 'admin' }).toArray(function(err, result) {
+	    	if (err) throw err;
+	    	else if(result && result.length > 0)
+	    	{
+	    		callback(err,null);
+	    	}
+	    	else
+	    	{
+	    		admin.save(function (err) {
+					 if(err)
+					 {
+					 	console.log(err.stack);
+					 	callback(err,null);
+					 }
+					 else
+					 {
+					 	console.log('roles created');
+					 	callback(null,true);
+					 }
+				});
+	    	}
+		    
+	  	});
 	},
 	createAdminUser: function(callback){
 		var conn = mongo.client;
