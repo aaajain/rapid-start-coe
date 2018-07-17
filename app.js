@@ -6,7 +6,6 @@ var queryUtils = require('./dao/query-utils.js');
 var async = require('async');
 var logger = require('./config/logger.js').getLogger('app.js');
 var mongo = require('./dao/mongo-connect.js');
-var userDetails = require('./models/userDetails.js');
 const app = express();
 app.use(bodyParser.json());
 /* Added below for CMS Rebate CR for request payload more that 0.1 MB*/
@@ -36,6 +35,12 @@ app.use(function (req, res, next) {
 });
 
 var globSync = require('glob').sync;
+
+//require all models
+globSync('./models/**/*.js', {
+    cwd: __dirname
+}).map(require);
+
 var allRoutes = globSync('./routes/**/*.js', {
     cwd: __dirname
 }).map(require);
@@ -49,15 +54,24 @@ mongo.connection.createConnection(function(err,db)
 {
 	console.log('db connect state '+mongo.client.readyState);
 	async.parallel({
-	    createAdminRole: function(callback) {
-	    	userDetails.methods.createAdminRole(function(err,data){
+	    createAdmin: function(callback) {
+	    	queryUtils.methods.createAdminRole(function(err,data){
 	    		if(err)
 	    		{
 	    			callback(err, null);
 	    		}
 	    		else
 	    		{
-	    			callback(null, true);
+			    	queryUtils.methods.createAdminUser(function(err,data){
+			    		if(err)
+			    		{
+			    			callback(err, null);
+			    		}
+			    		else
+			    		{
+			    			callback(null, true);
+			    		}
+			    	});
 	    		}
 	    	});
 	    }
