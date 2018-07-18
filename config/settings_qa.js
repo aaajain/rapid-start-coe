@@ -1,7 +1,7 @@
 var settings = {
 "mongo":
   {
-         "url":"mongodb://localhost:27017/test"
+         "url":"mongodb://admin:admin@chenoacluster-shard-00-00-7on4g.mongodb.net:27017,chenoacluster-shard-00-01-7on4g.mongodb.net:27017,chenoacluster-shard-00-02-7on4g.mongodb.net:27017/test?ssl=true&replicaSet=ChenoaCluster-shard-0&authSource=admin&retryWrites=true"
   },
 "contextRoot" : '/services/',
 "logLevel" : 'DEBUG',
