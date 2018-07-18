@@ -86,7 +86,10 @@ mongo.connection.createConnection(function(err,db)
 				if(err) throw err;
 				console.log('app listening on port ' + port + '!')
 			});
-			setRequestTimeOut.timeout = settings.timeOut; 
+			setRequestTimeOut.timeout = settings.timeOut;
+			/*queryUtils.methods.checkUserPermissionForAction('admin','view',function(err,data){ 
+				console.log(err);
+			});**/
 		}
 	});
 });

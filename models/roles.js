@@ -7,6 +7,11 @@ var roleSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  permissions:{
+  	type: [String],
+  	trim:true,
+  	required:true
+  }
 });
 
 mongoose.model('role_master',roleSchema);
