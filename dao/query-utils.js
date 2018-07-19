@@ -1,4 +1,5 @@
 var mongo = require('../dao/mongo-connect.js');
+var logger = require('../config/logger.js').getLogger('query-utils');
 
 var methods = 
 {

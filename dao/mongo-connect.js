@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var settings = require("../config/settings");
 var uri = settings.mongo.url;
+var logger = require('../config/logger.js').getLogger('mongo-connect');
 
 var options = {
   autoIndex: false, // Don't build indexes

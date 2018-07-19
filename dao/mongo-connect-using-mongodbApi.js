@@ -1,4 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
+var logger = require('../config/logger.js').getLogger('mongo-connect-using-mongodbApi');
 
 MongoClient.connect(uri, { useNewUrlParser: true },function(err, client) {
    //const collection = client.db("test").collection("devices");
