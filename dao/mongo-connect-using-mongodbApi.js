@@ -3,7 +3,7 @@ var MongoClient = require('mongodb').MongoClient;
 MongoClient.connect(uri, { useNewUrlParser: true },function(err, client) {
    //const collection = client.db("test").collection("devices");
    // perform actions on the collection object
- console.log(err);
+ logger.debug(err);
    //client.close();
 });
 

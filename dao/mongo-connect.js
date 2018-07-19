@@ -51,7 +51,7 @@ var connection =
 		mongoose.createConnection(uri,options,function(err,db){
 			if(err)
 			{
-				console.log(err.stack);
+				logger.debug(err.stack);
 				callback(err,null);
 			}
 			else

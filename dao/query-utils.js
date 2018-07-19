@@ -17,12 +17,12 @@ var methods =
 	    		admin.save(function (err) {
 					 if(err)
 					 {
-					 	console.log(err.stack);
+					 	logger.debug(err.stack);
 					 	callback(err,null);
 					 }
 					 else
 					 {
-					 	console.log('roles created');
+					 	logger.debug('roles created');
 					 	callback(null,true);
 					 }
 				});
@@ -42,19 +42,19 @@ var methods =
 	    		admin_user.findOneAndUpdate({username:'admin'},{$set: { email: 'admin@admin.com',username:'admin',password:'test',role:roleId}},{upsert: true, new: true, runValidators: true},function (err,doc) {
 					 if(err)
 					 {
-					 	console.log(err.stack);
+					 	logger.debug(err.stack);
 					 	callback(err,null);
 					 }
 					 else
 					 {
-					 	console.log('admin updated');
+					 	logger.debug('admin updated');
 					 	callback(null,true);
 					 }
 				});
 	    	}
 	    	else
 	    	{
-	    		console.log('role not found');
+	    		logger.debug('role not found');
 	    		callback(null,false);
 	    	}
 		});
@@ -65,10 +65,10 @@ var methods =
 		//get user role
 		//const admin_user= conn.model('user_master');
 		conn.collection("user_masters").find({}, { username: user }).toArray(function(err, result) {
-			console.log(result);
+			logger.debug(result);
 			if(err)
 			{
-				console.log(err.stack);
+				logger.debug(err.stack);
 				callback(err,null);
 			}
 			else
@@ -77,15 +77,15 @@ var methods =
 				if(roleId)
 				{
 					conn.model("role_master").findById(roleId,function(err,role){
-						console.log(role);
+						logger.debug(role);
 						if(err)
 						 {
-						 	console.log(err.stack);
+						 	logger.debug(err.stack);
 						 	callback(err,null);
 						 }
 						 else
 						 {
-						 	console.log('role found');
+						 	logger.debug('role found');
 						 	var permissions = role.permissions;
 						 	if(permissions.indexOf(action) >=0 )
 						 	{
