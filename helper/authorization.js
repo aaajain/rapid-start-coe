@@ -18,7 +18,8 @@ var authorize =
 				if(data)
 				{
 					logger.debug("user has access");
-					callback(null,true);
+					//callback(null,true);
+					callback(null,data);
 				}
 				else
 				{
