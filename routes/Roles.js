@@ -22,13 +22,13 @@ try {
                 res.status(500).send('Error occured while determining user permissions');
             } else if (dbres) { //dbres is either true or false
                 logger.debug(dbres);
-                /*conn.collection("role_masters").insertOne({permissions : args.action, role_name : role_name},{upsert: true},function(err,resp){
+                conn.collection("role_masters").insertOne({permissions : args.action, role_name : role_name},{upsert: true},function(err,resp){
                     if(err){
                         res.send('ERROR' + err.stack);
                     }else{
                         res.send('SUCCESS' + dbres);
                     }
-                });*/
+                });
             } else {
                 res.send(JSON.stringify({
                     "result": "FAILURE"
