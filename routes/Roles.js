@@ -28,7 +28,9 @@ try {
                     if(ierr){
                         res.send('ERROR' + ierr.stack);
                     }else{
-                        res.send('SUCCESS ' + result);
+                        res.send(JSON.stringify({
+                        "result": "SUCCESS"
+                }));
                     }
                 });
             } else {
