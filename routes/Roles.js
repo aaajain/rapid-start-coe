@@ -7,13 +7,15 @@ var mongo = require('../dao/mongo-connect.js');
 var queryUtils = require('../dao/query-utils.js');
 var AuthorizationHelper = require('../helper/authorization.js');
 var router = express.Router();
+var constants = require('../util/Constants.js');
 
 router.post('/userRoleActionForRoleMaster', function userRoleActionForRoleMaster(req, res) {    
 try {
         var conn = mongo.client;
         var role_name = req.body.role_name;
+        var permissions = req.body.permissions;
         var args = {
-            action : req.body.action,
+            action : constants.CREATE,
             user : req.body.user
         }
         AuthorizationHelper.auth(args, function(err, dbres) {
@@ -22,9 +24,9 @@ try {
                 res.status(500).send('Error occured while determining user permissions');
             } else if (dbres) { //dbres is either true or false
                 logger.debug(dbres);
-                queryUtils.methods.insertRoleMasters(role_name,args,function(ierr,result){
-                    if(err){
-                        res.send('ERROR' + err.stack);
+                queryUtils.methods.insertRoleMasters(role_name,permissions,function(ierr,result){
+                    if(ierr){
+                        res.send('ERROR' + ierr.stack);
                     }else{
                         res.send('SUCCESS ' + result);
                     }

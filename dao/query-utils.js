@@ -124,9 +124,10 @@ var methods =
 			}
 		});
 	},
-	insertRoleMasters : function(role_name,args,callback){
-		var conn = mongo.client;
-		conn.collection("role_masters").insertOne({permissions : args.action, role_name : role_name},{upsert: true},function(err,resp){
+	insertRoleMasters : function(role_name,permissions,callback){
+		vvar conn = mongo.client;
+		//conn.collection("role_masters").insertOne({permissions : permissions, role_name : role_name},{upsert: true},function(err,resp){
+          conn.collection("role_masters").findOneAndUpdate({role_name:role_name},{$set: { permissions : permissions, role_name : role_name}},{upsert: true, new: true, runValidators: true},function(err,resp){
             if(err){
                 logger.debug(err.stack);
                 callback(err,null);
