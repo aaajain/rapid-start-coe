@@ -31,13 +31,6 @@ try {
                         res.send('SUCCESS ' + result);
                     }
                 });
-                /*conn.collection("role_masters").insertOne({permissions : args.action, role_name : role_name},{upsert: true},function(err,resp){
-                    if(err){
-                        res.send('ERROR' + err.stack);
-                    }else{
-                        res.send('SUCCESS' + dbres);
-                    }
-                });*/
             } else {
                 res.send(JSON.stringify({
                     "result": "FAILURE"
