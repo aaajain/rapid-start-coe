@@ -8,7 +8,7 @@ var queryUtils = require('../dao/query-utils.js');
 var AuthorizationHelper = require('../helper/authorization.js');
 var router = express.Router();
 
-router.post('/getAllUsers', function getAllUsers(req, res) {
+router.get('/getAllUsers', function getAllUsers(req, res) {
      try {
      	var conn = mongo.client;
         var role_name = req.body.role_name;

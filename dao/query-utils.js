@@ -117,6 +117,18 @@ var methods =
 				callback(null,true);
 			}
 		});
+	},
+	insertRoleMasters : function(role_name,args,callback){
+		var conn = mongo.client;
+		conn.collection("role_masters").insertOne({permissions : args.action, role_name : role_name},{upsert: true},function(err,resp){
+            if(err){
+                logger.debug(err.stack);
+                callback(err,null);
+            }else{
+                logger.debug('data inserted');
+				callback(null,true);
+            }
+        });
 	}
 }
 
