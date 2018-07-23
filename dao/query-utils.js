@@ -34,7 +34,7 @@ var methods =
 	createAdminUser: function(callback){
 		var conn = mongo.client;
 		const admin_user= conn.model('user_master');
-		conn.collection("role_masters").find({}, { role: 'admin' }).toArray(function(err, result) {
+		conn.collection("role_masters").find({ role: 'admin' }).toArray(function(err, result) {
 	    	if (err) throw err;
 	    	else if(result && result.length > 0)
 	    	{
