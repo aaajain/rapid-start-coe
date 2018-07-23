@@ -16,7 +16,7 @@ router.get('/getAllUsers', function getAllUsers(req, res) {
             action : req.body.action,
             user : req.body.user
         }
-        queryUtils.methods.getAllUsersWithViewPermission(args.user,function(err, dbres) {
+        queryUtils.methods.getAllUsers(args.user,function(err, dbres) {
             if (err) {
                 logger.error('getAllUsers: error in fetching record');
                 res.status(500).send('Cound not fetch data');

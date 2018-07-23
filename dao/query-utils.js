@@ -108,7 +108,7 @@ var methods =
 
 		});
 	},
-	getAllUsersWithViewPermission : function(user,callback){
+	getAllUsers : function(user,callback){
 		var conn = mongo.client;
 		conn.collection("user_masters").find({}, { username: user }).toArray(function(err, result) {
 			logger.debug(result);
