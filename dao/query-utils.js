@@ -101,6 +101,22 @@ var methods =
 				}
 			}
 		});
+	},
+	getAllUsersWithViewPermission : function(user,callback){
+		var conn = mongo.client;
+		conn.collection("user_masters").find({}, { username: user }).toArray(function(err, result) {
+			logger.debug(result);
+			if(err)
+			{
+				logger.debug(err.stack);
+				callback(err,null);
+			}
+			else
+			{
+				logger.debug('data fetched');
+				callback(null,true);
+			}
+		});
 	}
 }
 
