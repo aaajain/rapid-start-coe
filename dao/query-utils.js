@@ -114,7 +114,7 @@ var methods =
 			logger.debug(result);
 			if(err)
 			{
-				logger.debug(err.stack);
+				logger.error(err.stack);
 				callback(err,null);
 			}
 			else
@@ -126,7 +126,7 @@ var methods =
 	},
 	insertRoleMasters : function(role_name,permissions,callback){
 		var conn = mongo.client;
-          conn.collection("role_masters").findOneAndUpdate({role_name:role_name},{$set: { permissions : permissions, role_name : role_name}},{upsert: true, new: true, runValidators: true},function(err,resp){
+          conn.collection("role_masters").findOneAndUpdate({role_name:role_name},{$set: { role_name : role_name, permissions : permissions }},{upsert: true, new: true, runValidators: true},function(err,resp){
             if(err){
                 logger.debug(err.stack);
                 callback(err,null);
