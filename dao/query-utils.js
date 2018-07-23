@@ -65,14 +65,14 @@ var methods =
 		var conn = mongo.client;
 		//get user role
 		//const admin_user= conn.model('user_master');
-		conn.collection("user_masters").find({}, { username: user }).toArray(function(err, result) {
+		conn.collection("user_masters").find({ username: user }).toArray(function(err, result) {
 			logger.debug(result);
 			if(err)
 			{
 				logger.debug(err.stack);
 				callback(err,null);
 			}
-			else
+			else if(result && result.length > 0)
 			{
 				var roleId = result[0].role;
 				if(roleId)
@@ -100,6 +100,12 @@ var methods =
 					});
 				}
 			}
+			else
+			{
+				logger.error('record not found');
+				callback(null,false);
+			}
+
 		});
 	},
 	getAllUsersWithViewPermission : function(user,callback){
