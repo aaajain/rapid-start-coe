@@ -131,7 +131,7 @@ var methods =
                 logger.debug(err.stack);
                 callback(err,null);
             }else{
-                logger.debug('data inserted');
+                logger.debug('role updated');
 				callback(null,true);
             }
         });

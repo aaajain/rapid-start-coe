@@ -55,7 +55,9 @@ mongo.connection.createConnection(function(err,db)
 	console.log('db connect state '+mongo.client.readyState);
 	async.parallel({
 	    createAdmin: function(callback) {
-	    	queryUtils.methods.createAdminRole(function(err,data){
+	    	var role_name = "admin",
+	    		permissions = ['view','create','modify','delete'];
+	    	queryUtils.methods.insertRoleMasters(role_name,permissions,function(err,data){
 	    		if(err)
 	    		{
 	    			callback(err, null);
