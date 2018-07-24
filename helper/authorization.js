@@ -17,7 +17,6 @@ var authorize =
 			{
 				if(data)
 				{
-					console.log(data);
 					logger.debug("user has access");
 					callback(null,true);
 				}
