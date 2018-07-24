@@ -16,7 +16,7 @@ try {
         var permissions = req.body.permissions;
         var args = {
             action : constants.CREATE,
-            user : req.body.user
+            user : req.body.logged_in_user
         }
         AuthorizationHelper.auth(args, function(err, dbres) {
             if (err) {
@@ -44,5 +44,41 @@ try {
         res.status(500).send('technical error occured while preparing userRoleActionForRoleMaster service');
     }
 });
+
+/*router.post('/userActionForUserMaster', function userActionForUserMaster(req, res) {    
+try {
+        var conn = mongo.client;
+        var role_name = req.body.role_name;
+        var permissions = req.body.permissions;
+        var args = {
+            action : constants.CREATE,
+            user : req.body.user
+        }
+        AuthorizationHelper.auth(args, function(err, dbres) {
+            if (err) {
+                logger.error('userActionForUserMaster: error in userActionForUserMaster');
+                res.status(500).send('Error occured while determining user permissions');
+            } else if (dbres) { //dbres is either true or false
+                logger.debug(dbres);
+                queryUtils.methods.insertRoleMasters(role_name,permissions,function(ierr,result){
+                    if(ierr){
+                        res.send('ERROR' + ierr.stack);
+                    }else{
+                        res.send(JSON.stringify({
+                        "result": "SUCCESS"
+                }));
+                    }
+                });
+            } else {
+                res.send(JSON.stringify({
+                    "result": "FAILURE"
+                }));
+            }
+        });
+    } catch (e) {
+        logger.error(e.stack);
+        res.status(500).send('technical error occured while preparing userActionForUserMaster service');
+    }
+});*/
 
 module.exports = router;

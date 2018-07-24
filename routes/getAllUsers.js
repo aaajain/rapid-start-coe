@@ -14,7 +14,7 @@ router.get('/getAllUsers', function getAllUsers(req, res) {
      	var conn = mongo.client;
         var args = {
             action : constants.VIEW,
-            user : req.query.user
+            user : req.query.logged_in_user
         }
         AuthorizationHelper.auth(args, function(err, dbres) {
             if (err) {
