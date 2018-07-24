@@ -1,5 +1,6 @@
 var constants = {
-"CREATE" : "create"
+"CREATE" : "create",
+"VIEW" : "view"
 }
 
 module.exports =constants;

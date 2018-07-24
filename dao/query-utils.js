@@ -108,9 +108,9 @@ var methods =
 
 		});
 	},
-	getAllUsers : function(user,callback){
+	getAllUsers : function(callback){
 		var conn = mongo.client;
-		conn.collection("user_masters").find({}, { username: user }).toArray(function(err, result) {
+		conn.collection("user_masters").find().toArray(function(err, result) {
 			logger.debug(result);
 			if(err)
 			{
@@ -120,7 +120,7 @@ var methods =
 			else
 			{
 				logger.debug('data fetched');
-				callback(null,true);
+				callback(null,result);
 			}
 		});
 	},

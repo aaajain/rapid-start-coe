@@ -5,8 +5,8 @@ var authorize =
 {
 	auth: function(args,callback)
 	{
-		var user = args.user
-		var action = args.action
+		var user = args.user;
+		var action = args.action;
 		queryUtils.methods.checkUserPermissionForAction(user,action,function(err,data){
 			if(err)
 			{

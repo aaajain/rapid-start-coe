@@ -91,7 +91,7 @@ mongo.connection.createConnection(function(err,db)
 			setRequestTimeOut.timeout = settings.timeOut;
 			/*queryUtils.methods.checkUserPermissionForAction('admin','view',function(err,data){ 
 				console.log(err);
-			});**/
+			});*/
 		}
 	});
 });
