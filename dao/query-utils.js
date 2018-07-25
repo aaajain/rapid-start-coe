@@ -135,6 +135,29 @@ var methods =
 				callback(null,true);
             }
         });
+	},
+	insertUserMasters : function(username,email,password,role_name,callback){
+		var conn = mongo.client;
+		conn.collection("role_masters").find({ role_name: role_name }).toArray(function(err, result) {
+			if (err) throw err;
+	    	else if(result && result.length > 0){
+	    		var roleId = result[0]._id;
+	    		conn.collection("user_masters").findOneAndUpdate({username : username},{$set : {username : username, email : email, password : password, role:roleId}},{upsert: true, new: true, runValidators: true},function(err,res){
+	    			if(err){
+		                logger.debug(err.stack);
+		                callback(err,null);
+		            }else{
+		                logger.debug('user updated');
+						callback(null,true);
+		            }
+	    		});
+	    	}
+	    	else
+	    	{
+	    		logger.debug('role not found');
+	    		callback(null,false);
+	    	}
+		});
 	}
 }
 

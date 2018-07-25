@@ -45,14 +45,16 @@ try {
     }
 });
 
-/*router.post('/userActionForUserMaster', function userActionForUserMaster(req, res) {    
+router.post('/userActionForUserMaster', function userActionForUserMaster(req, res) {    
 try {
         var conn = mongo.client;
+        var username = req.body.username;
         var role_name = req.body.role_name;
-        var permissions = req.body.permissions;
+        var email = req.body.email;
+        var password = req.body.password;
         var args = {
             action : constants.CREATE,
-            user : req.body.user
+            user : req.body.logged_in_user
         }
         AuthorizationHelper.auth(args, function(err, dbres) {
             if (err) {
@@ -60,7 +62,7 @@ try {
                 res.status(500).send('Error occured while determining user permissions');
             } else if (dbres) { //dbres is either true or false
                 logger.debug(dbres);
-                queryUtils.methods.insertRoleMasters(role_name,permissions,function(ierr,result){
+                queryUtils.methods.insertUserMasters(username,email,password,role_name,function(ierr,result){
                     if(ierr){
                         res.send('ERROR' + ierr.stack);
                     }else{
@@ -79,6 +81,6 @@ try {
         logger.error(e.stack);
         res.status(500).send('technical error occured while preparing userActionForUserMaster service');
     }
-});*/
+});
 
 module.exports = router;
