@@ -76,7 +76,21 @@ mongo.connection.createConnection(function(err,db)
 			    	});
 	    		}
 	    	});
-	    }
+	    },
+	    getRoleMasterData: function(callback) {
+    	queryUtils.methods.getRoleMasterData(function(err,data)
+		{
+			if(!err)
+			{
+				callback(null, true);
+			}
+			else
+			{
+				console.log(err.stack);
+				callback(err, null);
+			}
+		});
+    }
 	}, function(err, results) {
 	    // results is now equals to: {one: 1, two: 2}
 	    if(!err)
@@ -89,6 +103,7 @@ mongo.connection.createConnection(function(err,db)
 				console.log('app listening on port ' + port + '!')
 			});
 			setRequestTimeOut.timeout = settings.timeOut;
+			console.log(queryUtils.roleMasterData);
 			/*queryUtils.methods.checkUserPermissionForAction('admin','view',function(err,data){ 
 				console.log(err);
 			});*/

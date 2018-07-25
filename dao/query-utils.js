@@ -1,6 +1,8 @@
 var mongo = require('../dao/mongo-connect.js');
 var logger = require('../config/logger.js').getLogger('query-utils');
 
+var roleMasterData = {};
+
 var methods = 
 {
 	createAdminRole: function(callback){
@@ -158,7 +160,27 @@ var methods =
 	    		callback(null,false);
 	    	}
 		});
-	}
+	},
+	getRoleMasterData: function(callback) {
+		var conn = mongo.client;
+        conn.collection("role_masters").find().toArray(function(err, dbres) {
+            if (err) {
+                logger.error('getRoleMasterData ' + err.stack);
+                callback(err, null);
+            } else if (dbres && dbres.length > 0) {
+                for (var i = 0; i < dbres.length; i++) {
+                    //roleMasterData[dbres[i].role_name] = dbres[i].permissions;
+                    roleMasterData[i] = {"role_name" : dbres[i].role_name , "permissions" : dbres[i].permissions};
+                	//console.log(roleMasterData);
+
+                }
+                callback(null, roleMasterData);
+            } else {
+                callback("no records found", null);
+            }
+        });
+    }
 }
 
 module.exports.methods = methods;
+module.exports.roleMasterData = roleMasterData;
