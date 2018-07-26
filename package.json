@@ -21,20 +21,20 @@
     "sinon-mongoose": "^2.2.1"
   },
   "scripts": {
-    "cover": "node_modules/nyc/bin/nyc.js node_modules/mocha/bin/mocha --compilers js:node_modules/babel-cli/node_modules/babel-core/register  test/*.js",
+    "cover-unix": "node_modules/nyc/bin/nyc.js node_modules/mocha/bin/mocha --compilers js:node_modules/babel-cli/node_modules/babel-core/register  test/*.js",
+    "cover-windows":"node_modules/nyc/bin/nyc.js npm test",
     "test": "mocha --exit",
     "mochaExit": "exit 1"
   },
   "nyc": {
     "check-coverage": true,
     "per-file": true,
-    "lines": 1000,
-    "statements": 99,
-    "functions": 99,
-    "branches": 99,
+    "lines": 90,
+    "statements": 90,
+    "functions": 90,
+    "branches": 90,
     "include": [
-      "routes/DistinctNDC.js",
-      "routes/FollowUpTaskDetails.js"
+      "helper/authorization.js"
     ],
     "ignore-class-method": "methodToIgnore",
     "reporter": [
@@ -46,6 +46,12 @@
     ],
     "cache": true,
     "all": true,
-    "report-dir": "coverage"
+    "report-dir": "coverage",
+    "watermarks": {
+      "lines": [80, 95],
+      "functions": [80, 95],
+      "branches": [80, 95],
+      "statements": [80, 95]
+    }
   }
 }

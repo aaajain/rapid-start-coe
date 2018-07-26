@@ -89,14 +89,6 @@ var methods =
 						 else
 						 {
 						 	logger.debug('role found');
-						 	/*if(permissions.indexOf(action) >=0 )
-						 	{
-						 		callback(null,true);
-						 	}
-						 	else
-						 	{
-						 		callback(null,false);
-						 	}*/
 						 	callback(null,role.permissions);
 						 }
 					});
