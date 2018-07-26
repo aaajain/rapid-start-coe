@@ -104,7 +104,7 @@ mongo.connection.createConnection(function(err,db)
 			});
 			setRequestTimeOut.timeout = settings.timeOut;
 			console.log(queryUtils.roleMasterData);
-			/*queryUtils.methods.checkUserPermissionForAction('admin','view',function(err,data){ 
+			/*queryUtils.methods.checkUserPermissionForAction('admin',function(err,data){ 
 				console.log(err);
 			});*/
 		}

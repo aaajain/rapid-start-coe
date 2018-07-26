@@ -10,7 +10,7 @@ describe('test authorization', function () {
 	});
 	it('test if user was authorized', function (done) {
 		 AuthorizationHelper.auth({'user':'testUser','action':'create'},function(err,result){
-		 	assert.equal(res.text,JSON.stringify(expected_result));
+		 	assert.equal(result,true);
 		 })
 		 done();
 	});

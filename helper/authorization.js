@@ -7,7 +7,7 @@ var authorize =
 	{
 		var user = args.user;
 		var action = args.action;
-		queryUtils.methods.checkUserPermissionForAction(user,action,function(err,data){
+		queryUtils.methods.checkUserPermissionForAction(user,function(err,permissions){
 			if(err)
 			{
 				logger.debug(err.stack);
@@ -15,17 +15,16 @@ var authorize =
 			}
 			else
 			{
-				if(data)
-				{
-					logger.debug("user has access");
-					callback(null,true);
-				}
-				else
-				{
-					logger.debug("user do not have access")
-					callback(null,false);
-				}
-				
+				if(permissions && permissions.indexOf(action) >=0 )
+			 	{
+			 		logger.debug("user has access");
+			 		callback(null,true);
+			 	}
+			 	else
+			 	{
+			 		logger.debug("user do not have access")
+			 		callback(null,false);
+			 	}
 			}
 		});
 	}

@@ -62,7 +62,7 @@ var methods =
 	    	}
 		});
 	},
-	checkUserPermissionForAction: function(user,action,callback)
+	checkUserPermissionForAction: function(user,callback)
 	{
 		var conn = mongo.client;
 		//get user role
@@ -89,15 +89,15 @@ var methods =
 						 else
 						 {
 						 	logger.debug('role found');
-						 	var permissions = role.permissions;
-						 	if(permissions.indexOf(action) >=0 )
+						 	/*if(permissions.indexOf(action) >=0 )
 						 	{
 						 		callback(null,true);
 						 	}
 						 	else
 						 	{
 						 		callback(null,false);
-						 	}
+						 	}*/
+						 	callback(null,role.permissions);
 						 }
 					});
 				}
