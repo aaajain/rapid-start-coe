@@ -1,0 +1,125 @@
+
+{
+	"result" : [{
+		"username" : "Raj",
+		"email" : "raj@raj.com",
+		"password" : "raj",
+		"role_name" : "Intern"
+	},
+	{
+		"username" : "John",
+		"email" : "john@john.com",
+		"password" : "john",
+		"role_name" : "Architect"
+	},
+	{
+		"username" : "Alex",
+		"email" : "alex@alex.com",
+		"password" : "alex",
+		"role_name" : "Lead"
+	},
+	{
+		"username" : "suraj",
+		"email" : "suraj@suraj.com",
+		"password" : "suraj",
+		"role_name" : "Intern"
+	},
+	{
+		"username" : "parth",
+		"email" : "parth@parth.com",
+		"password" : "parth",
+		"role_name" : "admin"
+	},
+	{
+		"username" : "prjyot",
+		"email" : "prajyot@prajyot.com",
+		"password" : "prajyot",
+		"role_name" : "Lead"
+	},
+	{
+		"username" : "Vishal",
+		"email" : "vishal@vishal.com",
+		"password" : "vishal",
+		"role_name" : "Intern"
+	},
+	{
+		"username" : "Arinjay",
+		"email" : "arinjay@arinjay.com",
+		"password" : "arinjay",
+		"role_name" : "Architect"
+	},
+	{
+		"username" : "Sandeep",
+		"email" : "sandeep@sandeep.com",
+		"password" : "sandeep",
+		"role_name" : "admin"
+	},
+	{
+		"username" : "Pydi",
+		"email" : "pydi@pydi.com",
+		"password" : "pydi",
+		"role_name" : "Intern"
+	},
+	{
+		"username" : "Rex",
+		"email" : "rex@rex.com",
+		"password" : "rex",
+		"role_name" : "Intern"
+	},
+	{
+		"username" : "Vivek",
+		"email" : "vivek@vivek.com",
+		"password" : "vivek",
+		"role_name" : "Lead"
+	},
+	{
+		"username" : "Sayali",
+		"email" : "sayali@sayali.com",
+		"password" : "sayali",
+		"role_name" : "Architect"
+	},
+	{
+		"username" : "Pratik",
+		"email" : "pratik@pratik.com",
+		"password" : "pratik",
+		"role_name" : "Lead"
+	},
+	{
+		"username" : "Amrutha",
+		"email" : "amrutha@amrutha.com",
+		"password" : "amrutha",
+		"role_name" : "Architect"
+	},
+	{
+		"username" : "Sailadhirajendranath",
+		"email" : "kayal@kayal.com",
+		"password" : "kayal",
+		"role_name" : "admin"
+	},
+	{
+		"username" : "Nitendra",
+		"email" : "nitendra@nitedra.com",
+		"password" : "nitendra",
+		"role_name" : "Lead"
+	},
+	{
+		"username" : "Ashraf",
+		"email" : "ashraf@ashraf.com",
+		"password" : "ashraf",
+		"role_name" : "admin"
+	},
+	{
+		"username" : "Jyoti",
+		"email" : "jyoti@jyoti.com",
+		"password" : "jyoti",
+		"role_name" : "admin"
+	},
+	{
+		"username" : "Veera",
+		"email" : "veera@veera.com",
+		"password" : "veera",
+		"role_name" : "Lead"
+	}]
+}
+
+

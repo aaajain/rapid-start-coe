@@ -4,7 +4,7 @@ var settings =require('../config/settings.js');
 log4js.configure({ // configure to use all types in different files.
     appenders: [
         {   type: 'file',
-            filename: "./logs/server.log", // specify the path where u want logs folder error.log
+            filename: "../logs/server.log", // specify the path where u want logs folder error.log
             maxLogSize: 2000000,
             backups: 40
         }

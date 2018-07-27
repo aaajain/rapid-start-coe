@@ -171,6 +171,36 @@ var methods =
                 callback("no records found", null);
             }
         });
+    },
+    createExceptionRecord: function(batch_id, paramName,
+        paramValue,exception_reason, exception_desc, origin, callback) {
+        if (!batch_id) {
+            logger.error('createExceptionRecord: batch_id cannot be null')
+            return callback('batch_id cannot be null');
+        }
+        conn.collection("batch_exception").insertOne({batch_id : batch_id, parameter_name : paramName,
+        	parameter_value : paramValue, exception_reason : exception_reason, exception_desc : exception_desc,
+        	origin : origin},function(err, dbres){
+        		if (err) {
+	                logger.error('BatchExceptionInsert: ' + err.stack);
+	                return callback(err);
+            	}
+            	logger.debug('batch_exception: insert success in BATCH_EXCEPTION ');
+            	conn.collection("batch_execution_status").findOneAndUpdate({batch_id : batch_id,
+            		parameter_name : paramName, parameter_value : paramValue},{$set : {"is_success" : "N"}},
+            		{upsert: true, new: true, runValidators: true},function(err,res){
+            			if (err) {
+                    		logger.error('error while updating batch_execution_status: ' + err.stack);
+                    		return callback(err);
+                		}
+                		if (dbres && dbres.rowCount == 0) {
+                    		logger.error("batch_execution_status: No data found for batch_id");
+                    		return callback(null);
+                		}
+                		logger.debug('batch_execution_status: update success in batch_execution_status');
+                		return callback(null);
+            		});
+        	});
     }
 }
 
