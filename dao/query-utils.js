@@ -1,5 +1,6 @@
 var mongo = require('../dao/mongo-connect.js');
 var logger = require('../config/logger.js').getLogger('query-utils');
+var constants = require('../util/Constants.js');
 
 var roleMasterData = {};
 
@@ -201,7 +202,43 @@ var methods =
                 		return callback(null);
             		});
         	});
-    }
+    },
+    userBatchUpload : function(key,callback){
+		var conn = mongo.client;
+		conn.collection("role_masters").find({ role_name: key.role_name }).toArray(function(err, result) {
+			if (err) throw err;
+	    	else if(result && result.length > 0){
+	    		var roleId = result[0]._id;
+	    		var userObj = { username : key.username, email : key.email, password : key.password, role : roleId };
+	    		conn.collection("user_masters").insertOne(userObj,function(err,res){
+	    			if(err){
+		                logger.debug(err.stack);
+		                callback(err,null);
+		            }else{
+		                logger.debug('users inserted');
+						callback(null,true);
+		            }
+	    		});
+	    	}
+	    	else
+	    	{
+	    		logger.debug('role not found');
+	    		callback(null,false);
+	    	}
+		});
+	},
+	insertBatchMaster : function(batch_size,callback){
+		var conn = mongo.client;
+          conn.collection("batch_master").insertOne({batch_size : batch_size, batch_name : constants.upload_users_batch, origin : constants.node},function(err,resp){
+            if(err){
+                logger.debug(err.stack);
+                callback(err,null);
+            }else{
+                logger.debug('record inserted for batch upload');
+				callback(null,true);
+            }
+        });
+	}
 }
 
 module.exports.methods = methods;
