@@ -8,6 +8,7 @@ var queryUtils = require('../dao/query-utils.js');
 var AuthorizationHelper = require('../helper/authorization.js');
 var router = express.Router();
 var constants = require('../util/Constants.js');
+var bcrypt = require('bcrypt');
 
 router.post('/userRoleActionForRoleMaster', function userRoleActionForRoleMaster(req, res) {    
 try {
@@ -52,6 +53,9 @@ try {
         var role_name = req.body.role_name;
         var email = req.body.email;
         var password = req.body.password;
+        var salt = bcrypt.genSaltSync(10);
+        var hash = bcrypt.hashSync(password, salt);
+        logger.debug(hash);
         var args = {
             action : constants.CREATE,
             user : req.body.logged_in_user
@@ -62,7 +66,7 @@ try {
                 res.status(500).send('Error occured while determining user permissions');
             } else if (dbres) { //dbres is either true or false
                 logger.debug(dbres);
-                queryUtils.methods.insertUserMasters(username,email,password,role_name,function(ierr,result){
+                queryUtils.methods.insertUserMasters(username,email,hash,role_name,function(ierr,result){
                     if(ierr){
                         res.send('ERROR' + ierr.stack);
                     }else{
