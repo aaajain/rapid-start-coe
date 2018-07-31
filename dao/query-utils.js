@@ -245,29 +245,18 @@ var methods =
             }
         });
 	},
-	insertBatchExecutionStatus : function(key,callback){
-		var conn = mongo.client;
-		conn.collection("batch_master").find({ batch_name: constants.UPLOAD_USERS_BATCH }, { sort: { _id: -1 }, limit: 1}).toArray(function(err, result) {
-			if (err) throw err;
-	    	else if(result && result.length > 0){
-	    		var batchId = result[0]._id;
-	    		var batchObj = {parameter_name : constants.USER_NAME, parameter_value : key.username, is_success : "Y", batch_id : batchId};
-	    		conn.collection("batch_execution_status").insertOne(batchObj,function(err,res){
-	    			if(err){
-		                logger.debug(err.stack);
-		                callback(err,null);
-		            }else{
-		                logger.debug('inserted record into the batch_execution_status table');
-						callback(null,true);
-		            }
-	    		});
-	    	}
-	    	else
-	    	{
-	    		logger.debug('batch not found');
-	    		callback(null,false);
-	    	}
-		});
+	insertBatchExecutionStatus : function(key,batch_id,callback){
+		var conn = mongo.client;	
+		var batchObj = {parameter_name : constants.USER_NAME, parameter_value : key.username, is_success : "Y", batch_id : batch_id};
+		conn.collection("batch_execution_status").insertOne(batchObj,function(err,res){
+			if(err){
+                logger.debug(err.stack);
+                callback(err,null);
+            }else{
+                logger.debug('inserted record into the batch_execution_status table');
+				callback(null,true);
+            }
+		});	    	
 	}
 }
 

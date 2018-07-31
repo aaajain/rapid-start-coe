@@ -35,7 +35,7 @@ mongo.connection.createConnection(function(err,db){
 			var batch_id = data;
 			async.eachSeries(obj.result, function(key,asyncCallback){
 				//insert in batch execution with Y
-				queryUtils.methods.insertBatchExecutionStatus(key,function(ierr,ires){
+				queryUtils.methods.insertBatchExecutionStatus(key,batch_id,function(ierr,ires){
 					if(ierr)
 					{
 						logger.error('error occured while inserting into the batch_execution_status table');
