@@ -11,6 +11,7 @@ var queryUtils = require('../dao/query-utils.js');
 var async = require('async');
 const app = express();
 var bcrypt = require('bcrypt');
+var exc = require('../util/Exception.js');
 
 var globSync = require('glob').sync;
 
@@ -55,7 +56,7 @@ mongo.connection.createConnection(function(err,db){
 							    {
 							        if (dberr) 
 							        {
-							            logger.error('error in exception db'+err.stack);
+							            logger.error('error in exception db'+dberr.stack);
 							            return asyncCallback(dberr,null);
 							        }
 							        else
@@ -75,13 +76,13 @@ mongo.connection.createConnection(function(err,db){
 				    		else
 				    		{
 				    			//role not present
-				    			var exception_reason = err.message;
-							    var exception_desc = exc.trimStack(err.stack);
-							    exc.insertException(batch_id,constants.USER_NAME,key.username,"error occured while inserting the record", exception_desc, constants.NODE, function(dberr) 
+				    			//var exception_reason = err.message;
+							    //var exception_desc = exc.trimStack(err.stack);
+							    exc.insertException(batch_id,constants.USER_NAME,key.username,null, null, constants.NODE, function(dberr) 
 							    {
 							        if (dberr) 
 							        {
-							            logger.error('error in exception db'+err.stack);
+							            logger.error('error in exception db'+dberr.stack);
 							            return asyncCallback(dberr,null);
 							        }
 							        else

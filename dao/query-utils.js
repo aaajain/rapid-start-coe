@@ -175,6 +175,7 @@ var methods =
     },
     createExceptionRecord: function(batch_id, paramName,
         paramValue,exception_reason, exception_desc, origin, callback) {
+    	var conn = mongo.client;
         if (!batch_id) {
             logger.error('createExceptionRecord: batch_id cannot be null')
             return callback('batch_id cannot be null');
@@ -246,7 +247,7 @@ var methods =
 	},
 	insertBatchExecutionStatus : function(key,callback){
 		var conn = mongo.client;
-		conn.collection("batch_master").find({ batch_name: constants.UPLOAD_USERS_BATCH }).toArray(function(err, result) {
+		conn.collection("batch_master").find({ batch_name: constants.UPLOAD_USERS_BATCH }, { sort: { _id: -1 }, limit: 1}).toArray(function(err, result) {
 			if (err) throw err;
 	    	else if(result && result.length > 0){
 	    		var batchId = result[0]._id;
