@@ -43,7 +43,7 @@ mongo.connection.createConnection(function(err,db){
 					else
 					{
 						logger.debug('record inserted successfully in batch_execution_status table');
-						var salt = bcrypt.genSaltSync(10);
+						var salt = bcrypt.genSaltSync(constants.SALT_ROUNDS);
 				        var hash = bcrypt.hashSync(key.password, salt);
 				        key.password = hash;
 						queryUtils.methods.userBatchUpload(key,function(err,data){

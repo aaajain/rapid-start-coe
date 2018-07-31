@@ -51,7 +51,7 @@ try {
         var role_name = req.body.role_name;
         var email = req.body.email;
         var password = req.body.password;
-        var salt = bcrypt.genSaltSync(10);
+        var salt = bcrypt.genSaltSync(constants.SALT_ROUNDS);
         var hash = bcrypt.hashSync(password, salt);
         logger.debug(hash);
         var args = {
