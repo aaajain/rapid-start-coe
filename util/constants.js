@@ -1,8 +1,9 @@
 var constants = {
 "CREATE" : "create",
 "VIEW" : "view",
-"upload_users_batch" : "upload_users_batch",
-"node" : "node"
+"UPLOAD_USERS_BATCH" : "upload_users_batch",
+"NODE" : "node",
+"USER_NAME":"username"
 }
 
 module.exports =constants;

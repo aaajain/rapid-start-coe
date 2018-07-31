@@ -10,7 +10,7 @@ var router = express.Router();
 var constants = require('../util/Constants.js');
 var bcrypt = require('bcrypt');
 
-router.post('/userRoleActionForRoleMaster', function userRoleActionForRoleMaster(req, res) {    
+router.post('/insertRole', function userRoleActionForRoleMaster(req, res) {    
 try {
         var conn = mongo.client;
         var role_name = req.body.role_name;
@@ -43,47 +43,6 @@ try {
     } catch (e) {
         logger.error(e.stack);
         res.status(500).send('technical error occured while preparing userRoleActionForRoleMaster service');
-    }
-});
-
-router.post('/userActionForUserMaster', function userActionForUserMaster(req, res) {    
-try {
-        var conn = mongo.client;
-        var username = req.body.username;
-        var role_name = req.body.role_name;
-        var email = req.body.email;
-        var password = req.body.password;
-        var salt = bcrypt.genSaltSync(10);
-        var hash = bcrypt.hashSync(password, salt);
-        logger.debug(hash);
-        var args = {
-            action : constants.CREATE,
-            user : req.body.logged_in_user
-        }
-        AuthorizationHelper.auth(args, function(err, dbres) {
-            if (err) {
-                logger.error('userActionForUserMaster: error in userActionForUserMaster');
-                res.status(500).send('Error occured while determining user permissions');
-            } else if (dbres) { //dbres is either true or false
-                logger.debug(dbres);
-                queryUtils.methods.insertUserMasters(username,email,hash,role_name,function(ierr,result){
-                    if(ierr){
-                        res.send('ERROR' + ierr.stack);
-                    }else{
-                        res.send(JSON.stringify({
-                        "result": "SUCCESS"
-                }));
-                    }
-                });
-            } else {
-                res.send(JSON.stringify({
-                    "result": "FAILURE"
-                }));
-            }
-        });
-    } catch (e) {
-        logger.error(e.stack);
-        res.status(500).send('technical error occured while preparing userActionForUserMaster service');
     }
 });
 

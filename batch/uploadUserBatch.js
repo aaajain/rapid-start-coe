@@ -10,6 +10,7 @@ var fs = require('fs');
 var queryUtils = require('../dao/query-utils.js');
 var async = require('async');
 const app = express();
+var bcrypt = require('bcrypt');
 
 var globSync = require('glob').sync;
 
@@ -29,38 +30,81 @@ mongo.connection.createConnection(function(err,db){
 		}
 		else
 		{
-			async.eachSeries(obj.result, function(key,callback){
-			console.log(key);
 			var conn = mongo.client;
-
-			queryUtils.methods.userBatchUpload(key,function(err,data){
-	    		if(err)
-	    		{
-	    			logger.error('error while inserting user batch in user_masters table');
-	    			callback(err, null);
-	    		}
-	    		else
-	    		{
-	    			logger.debug('users inserted successfully');
-	    			callback(null, true);
-	    		}
-	    	});			
-		},
-		function(ferr)
-		{
-			if(ferr)
+			var batch_id = data;
+			async.eachSeries(obj.result, function(key,callback){
+				//insert in batch execution with Y
+				queryUtils.methods.insertBatchExecutionStatus(key,function(ierr,ires){
+					if(ierr)
+					{
+						logger.error('error occured while inserting into the batch_execution_status table');
+						callback(ierr,null);
+					}
+					else
+					{
+						logger.debug('record inserted successfully in batch_execution_status table');
+						var salt = bcrypt.genSaltSync(10);
+				        var hash = bcrypt.hashSync(key.password, salt);
+				        key.password = hash;
+						queryUtils.methods.userBatchUpload(key,function(err,data){
+				    		if(err)
+				    		{
+				    			var exception_reason = err.message;
+							    var exception_desc = exc.trimStack(err.stack);
+							    exc.insertException(batch_id,constants.USER_NAME,key.username,"error occured while inserting the record", exception_desc, constants.NODE, function(dberr) 
+							    {
+							        if (dberr) 
+							        {
+							            logger.error('error in exception db'+err.stack);
+							            return callback(dberr);
+							        }
+							        else
+							        {
+							           logger.info('logging done in db');
+							           return callback(dberr);
+							        }
+							    });
+				    			logger.error('error while inserting user batch in user_masters table');
+				    			callback(err, null);
+				    		}
+				    		else
+				    		{
+				    			logger.debug('users inserted successfully');
+				    			callback(null, true);
+				    		}
+				    	});			
+					}
+				});
+			},
+			function(ferr)
 			{
-				logger.error('error in function',ferr);
-				callback(ferr,null);
-			} 
-			else
-			{
-				return;
-				logger.debug('in function completed');
-				callback(null,null);
-			}
+				if(ferr)
+				{
+					var exception_reason = err.message;
+				    var exception_desc = exc.trimStack(err.stack);
+				    exc.insertException(batch_id,constants.USER_NAME,key.username,"error occured while inserting the record", err.stack, constants.NODE, function(dberr) 
+				    {
+				        if (dberr) 
+				        {
+				            logger.error('error in exception db'+err.stack);
+				            return callback(dberr);
+				        }
+				        else
+				        {
+				           logger.info('logging done in db');
+				           return callback(dberr);
+				        }
+				    });
+					logger.error('error in function',ferr);
+					callback(ferr,null);
+				} 
+				else
+				{
+					logger.debug('in function completed');
+					callback(null,true);
+				}
 
-		});
+			});
 		}
 	});
 });

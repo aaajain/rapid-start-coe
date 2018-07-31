@@ -8,6 +8,7 @@ var queryUtils = require('../dao/query-utils.js');
 var AuthorizationHelper = require('../helper/authorization.js');
 var router = express.Router();
 var constants = require('../util/Constants.js');
+var bcrypt = require('bcrypt');
 
 router.get('/getAllUsers', function getAllUsers(req, res) {
      try {
@@ -40,6 +41,47 @@ router.get('/getAllUsers', function getAllUsers(req, res) {
     } catch (e) {
         logger.error(e.stack);
         res.status(500).send('technical error occured while fetching record from user_masters table');
+    }
+});
+
+router.post('/createUser', function userActionForUserMaster(req, res) {    
+try {
+        var conn = mongo.client;
+        var username = req.body.username;
+        var role_name = req.body.role_name;
+        var email = req.body.email;
+        var password = req.body.password;
+        var salt = bcrypt.genSaltSync(10);
+        var hash = bcrypt.hashSync(password, salt);
+        logger.debug(hash);
+        var args = {
+            action : constants.CREATE,
+            user : req.body.logged_in_user
+        }
+        AuthorizationHelper.auth(args, function(err, dbres) {
+            if (err) {
+                logger.error('userActionForUserMaster: error in userActionForUserMaster');
+                res.status(500).send('Error occured while determining user permissions');
+            } else if (dbres) { //dbres is either true or false
+                logger.debug(dbres);
+                queryUtils.methods.insertUserMasters(username,email,hash,role_name,function(ierr,result){
+                    if(ierr){
+                        res.send('ERROR' + ierr.stack);
+                    }else{
+                        res.send(JSON.stringify({
+                        "result": "SUCCESS"
+                }));
+                    }
+                });
+            } else {
+                res.send(JSON.stringify({
+                    "result": "FAILURE"
+                }));
+            }
+        });
+    } catch (e) {
+        logger.error(e.stack);
+        res.status(500).send('technical error occured while preparing userActionForUserMaster service');
     }
 });
 
