@@ -26,19 +26,19 @@ mongo.connection.createConnection(function(err,db){
 		if(err)
 		{
 			logger.error('error while inserting entry in batch_master table');
-			callback(err, null);
+			//callback(err, null);
 		}
 		else
 		{
 			var conn = mongo.client;
 			var batch_id = data;
-			async.eachSeries(obj.result, function(key,callback){
+			async.eachSeries(obj.result, function(key,asyncCallback){
 				//insert in batch execution with Y
 				queryUtils.methods.insertBatchExecutionStatus(key,function(ierr,ires){
 					if(ierr)
 					{
 						logger.error('error occured while inserting into the batch_execution_status table');
-						callback(ierr,null);
+						asyncCallback(ierr,null);
 					}
 					else
 					{
@@ -56,21 +56,40 @@ mongo.connection.createConnection(function(err,db){
 							        if (dberr) 
 							        {
 							            logger.error('error in exception db'+err.stack);
-							            return callback(dberr);
+							            return asyncCallback(dberr,null);
 							        }
 							        else
 							        {
 							           logger.info('logging done in db');
-							           return callback(dberr);
+							           return asyncCallback(dberr,true);
 							        }
 							    });
 				    			logger.error('error while inserting user batch in user_masters table');
-				    			callback(err, null);
+				    			//callback(err, null);
+				    		}
+				    		else if(data)
+				    		{
+				    			logger.debug('users inserted successfully');
+				    			asyncCallback(null, true);
 				    		}
 				    		else
 				    		{
-				    			logger.debug('users inserted successfully');
-				    			callback(null, true);
+				    			//role not present
+				    			var exception_reason = err.message;
+							    var exception_desc = exc.trimStack(err.stack);
+							    exc.insertException(batch_id,constants.USER_NAME,key.username,"error occured while inserting the record", exception_desc, constants.NODE, function(dberr) 
+							    {
+							        if (dberr) 
+							        {
+							            logger.error('error in exception db'+err.stack);
+							            return asyncCallback(dberr,null);
+							        }
+							        else
+							        {
+							           logger.info('logging done in db');
+							           return asyncCallback(dberr,true);
+							        }
+							    });
 				    		}
 				    	});			
 					}
@@ -87,21 +106,22 @@ mongo.connection.createConnection(function(err,db){
 				        if (dberr) 
 				        {
 				            logger.error('error in exception db'+err.stack);
-				            return callback(dberr);
+				            //return callback(dberr);
 				        }
 				        else
 				        {
 				           logger.info('logging done in db');
-				           return callback(dberr);
+				           //return callback(dberr);
 				        }
 				    });
 					logger.error('error in function',ferr);
-					callback(ferr,null);
+					//callback(ferr,null);
 				} 
 				else
 				{
 					logger.debug('in function completed');
-					callback(null,true);
+					console.log('in function completed');
+					//callback(null,true);
 				}
 
 			});
