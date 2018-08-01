@@ -63,19 +63,20 @@ mongo.connection.createConnection(function(err,db)
 		else
 		{
 			//async.eachseries
+			async.eachSeries(tenant.result, function(tenant,asyncCallback){
 			console.log('db connect state '+mongo.client.readyState);
 			async.parallel({
 			    createAdmin: function(callback) {
 			    	var role_name = "admin",
 			    		permissions = ['view','create','modify','delete'];
-			    	queryUtils.methods.insertRoleMasters(role_name,permissions,"tenant1",function(err,data){
+			    	queryUtils.methods.insertRoleMasters(role_name,permissions,tenant.tenant_name,function(err,data){
 			    		if(err)
 			    		{
 			    			callback(err, null);
 			    		}
 			    		else
 			    		{
-					    	queryUtils.methods.createAdminUser("tenant1",function(err,data){
+					    	queryUtils.methods.createAdminUser(tenant.tenant_name,function(err,data){
 					    		if(err)
 					    		{
 					    			callback(err, null);
@@ -106,6 +107,30 @@ mongo.connection.createConnection(function(err,db)
 			    // results is now equals to: {one: 1, two: 2}
 			    if(!err)
 			    {
+					/*queryUtils.methods.checkUserPermissionForAction('admin',function(err,data){ 
+						console.log(err);
+					});*/
+					asyncCallback();
+				}
+				else
+				{
+					//log the error
+					logger.error('error occurred', err.stack);
+					//exit
+					process.exit(1);
+				}
+			});
+		},
+		function(err){
+			if(err)
+			{
+				logger.error('error occured while inserting tenant');
+			}
+			else
+			{
+				logger.debug('tenant function completed');
+				console.log('tenant function completed');
+
 			    	var port = settings.appPort;
 			    	var server = http.createServer(app); 
 					var setRequestTimeOut = server.listen(port,function(err)
@@ -115,11 +140,8 @@ mongo.connection.createConnection(function(err,db)
 					});
 					setRequestTimeOut.timeout = settings.timeOut;
 					console.log(queryUtils.roleMasterData);
-					/*queryUtils.methods.checkUserPermissionForAction('admin',function(err,data){ 
-						console.log(err);
-					});*/
-				}
-			});
+			}
+		});
 		}
 	});
 });
