@@ -11,6 +11,8 @@ app.use(bodyParser.json());
 /* Added below for CMS Rebate CR for request payload more that 0.1 MB*/
 app.use(bodyParser.json({limit: '50mb'})); 
 //Code added for resolving cors issue.
+//var fs = require('fs');
+var tenant = require('./config/uploadTenants.json');
 
 app.use(function (req, res, next) {
 
@@ -52,61 +54,72 @@ allRoutes.forEach(function(routes) {
 });*/
 mongo.connection.createConnection(function(err,db)
 {
-	console.log('db connect state '+mongo.client.readyState);
-	async.parallel({
-	    createAdmin: function(callback) {
-	    	var role_name = "admin",
-	    		permissions = ['view','create','modify','delete'];
-	    	queryUtils.methods.insertRoleMasters(role_name,permissions,function(err,data){
-	    		if(err)
-	    		{
-	    			callback(err, null);
-	    		}
-	    		else
-	    		{
-			    	queryUtils.methods.createAdminUser(function(err,data){
+	//var obj = JSON.parse(fs.readFileSync('./config/uploadTenants.json', 'utf8'));
+	queryUtils.methods.insertTenantMaster(tenant,function(err,data){
+		if(err)
+		{
+			logger.error('error while inserting entry in tenant_master table');
+		}
+		else
+		{
+			//async.eachseries
+			console.log('db connect state '+mongo.client.readyState);
+			async.parallel({
+			    createAdmin: function(callback) {
+			    	var role_name = "admin",
+			    		permissions = ['view','create','modify','delete'];
+			    	queryUtils.methods.insertRoleMasters(role_name,permissions,"tenant1",function(err,data){
 			    		if(err)
 			    		{
 			    			callback(err, null);
 			    		}
 			    		else
 			    		{
-			    			callback(null, true);
+					    	queryUtils.methods.createAdminUser("tenant1",function(err,data){
+					    		if(err)
+					    		{
+					    			callback(err, null);
+					    		}
+					    		else
+					    		{
+					    			callback(null, true);
+					    		}
+					    	});
 			    		}
 			    	});
-	    		}
-	    	});
-	    },
-	    getRoleMasterData: function(callback) {
-    	queryUtils.methods.getRoleMasterData(function(err,data)
-		{
-			if(!err)
-			{
-				callback(null, true);
-			}
-			else
-			{
-				console.log(err.stack);
-				callback(err, null);
-			}
-		});
-    }
-	}, function(err, results) {
-	    // results is now equals to: {one: 1, two: 2}
-	    if(!err)
-	    {
-	    	var port = settings.appPort;
-	    	var server = http.createServer(app); 
-			var setRequestTimeOut = server.listen(port,function(err)
-			{
-				if(err) throw err;
-				console.log('app listening on port ' + port + '!')
+			    }//,
+			    /*getRoleMasterData: function(callback) {
+		    	queryUtils.methods.getRoleMasterData(function(err,data)
+				{
+					if(!err)
+					{
+						callback(null, true);
+					}
+					else
+					{
+						console.log(err.stack);
+						callback(err, null);
+					}
+				});
+		    }*/
+			}, function(err, results) {
+			    // results is now equals to: {one: 1, two: 2}
+			    if(!err)
+			    {
+			    	var port = settings.appPort;
+			    	var server = http.createServer(app); 
+					var setRequestTimeOut = server.listen(port,function(err)
+					{
+						if(err) throw err;
+						console.log('app listening on port ' + port + '!')
+					});
+					setRequestTimeOut.timeout = settings.timeOut;
+					console.log(queryUtils.roleMasterData);
+					/*queryUtils.methods.checkUserPermissionForAction('admin',function(err,data){ 
+						console.log(err);
+					});*/
+				}
 			});
-			setRequestTimeOut.timeout = settings.timeOut;
-			console.log(queryUtils.roleMasterData);
-			/*queryUtils.methods.checkUserPermissionForAction('admin',function(err,data){ 
-				console.log(err);
-			});*/
 		}
 	});
 });

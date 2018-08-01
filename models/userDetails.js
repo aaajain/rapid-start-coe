@@ -1,4 +1,7 @@
 var mongoose = require('mongoose');
+var multitenancy = require('mongoose-multitenancy');
+ 
+multitenancy.setup();
 
 var userSchema = new mongoose.Schema({
   email: {
@@ -15,14 +18,15 @@ var userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: true
   },
   role:{
   	type: mongoose.Schema.ObjectId,
   	ref: 'role_master',
   	required: true,
+    $tenant:true
   }
 });
 
-mongoose.model('user_master',userSchema);
+mongoose.mtModel('user_master',userSchema);
 

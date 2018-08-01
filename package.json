@@ -13,7 +13,8 @@
     "log4js": "0.6.38",
     "mocha": "5.1.0",
     "mongodb": "^3.1.1",
-    "mongoose": "5.2.3",
+    "mongoose": "^5.2.6",
+    "mongoose-multitenancy": "^0.1.19",
     "multer": "^1.3.0",
     "nyc": "^11.7.1",
     "request": "2.81.0",
@@ -22,7 +23,7 @@
   },
   "scripts": {
     "cover-unix": "node_modules/nyc/bin/nyc.js node_modules/mocha/bin/mocha --compilers js:node_modules/babel-cli/node_modules/babel-core/register  test/*.js",
-    "cover-windows":"node_modules/nyc/bin/nyc.js npm test",
+    "cover-windows": "node_modules/nyc/bin/nyc.js npm test",
     "test": "mocha --exit",
     "mochaExit": "exit 1"
   },
@@ -48,10 +49,22 @@
     "all": true,
     "report-dir": "coverage",
     "watermarks": {
-      "lines": [80, 95],
-      "functions": [80, 95],
-      "branches": [80, 95],
-      "statements": [80, 95]
+      "lines": [
+        80,
+        95
+      ],
+      "functions": [
+        80,
+        95
+      ],
+      "branches": [
+        80,
+        95
+      ],
+      "statements": [
+        80,
+        95
+      ]
     }
   }
 }

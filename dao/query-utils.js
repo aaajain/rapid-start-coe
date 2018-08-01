@@ -1,6 +1,9 @@
 var mongo = require('../dao/mongo-connect.js');
 var logger = require('../config/logger.js').getLogger('query-utils');
 var constants = require('../util/Constants.js');
+/*var multitenancy = require('mongoose-multitenancy');
+ 
+multitenancy.setup();*/
 
 var roleMasterData = {};
 
@@ -34,16 +37,16 @@ var methods =
 		    
 	  	});
 	},
-	createAdminUser: function(callback){
+	createAdminUser: function(tenant,callback){
 		var conn = mongo.client;
-		const admin_user= conn.model('user_master');
-		conn.collection("role_masters").find({ role_name: 'admin' }).toArray(function(err, result) {
+		//const admin_user= conn.mtModel(tenant+'.user_master');
+		conn.collection(tenant+".role_masters").find({ role_name: 'admin' }).toArray(function(err, result) {
 	    	if (err) throw err;
 	    	else if(result && result.length > 0)
 	    	{
 	    		var roleId = result[0]._id;
 	    		//const admin = new admin_user({ email: 'admin@admin.com',username:'admin',password:'test',role:roleId});
-	    		admin_user.findOneAndUpdate({username:'admin'},{$set: { email: 'admin@admin.com',username:'admin',password:'test',role:roleId}},{upsert: true, new: true, runValidators: true},function (err,doc) {
+	    		conn.collection(tenant+".user_masters").findOneAndUpdate({username:'admin'},{$set: { email: 'admin@admin.com',username:'admin',password:'test',role:roleId}},{upsert: true, new: true, runValidators: true},function (err,doc) {
 					 if(err)
 					 {
 					 	logger.debug(err.stack);
@@ -119,9 +122,9 @@ var methods =
 			}
 		});
 	},
-	insertRoleMasters : function(role_name,permissions,callback){
+	insertRoleMasters : function(role_name,permissions,tenant,callback){
 		var conn = mongo.client;
-          conn.collection("role_masters").findOneAndUpdate({role_name:role_name},{$set: { role_name : role_name, permissions : permissions }},{upsert: true, new: true, runValidators: true},function(err,resp){
+          conn.collection(tenant+".role_masters").findOneAndUpdate({role_name:role_name},{$set: { role_name : role_name, permissions : permissions }},{upsert: true, new: true, runValidators: true},function(err,resp){
             if(err){
                 logger.debug(err.stack);
                 callback(err,null);
@@ -257,6 +260,19 @@ var methods =
 				callback(null,true);
             }
 		});	    	
+	},
+	insertTenantMaster : function(tenant,callback){
+		var conn = mongo.client;
+		//var tenantMasterObj = {tenant_name : result.tenant_name, status : result.status};
+          conn.collection("tenant_master").insertMany(tenant.result,function(err,resp){
+            if(err){
+                logger.debug(err.stack);
+                callback(err,null);
+            }else{
+                logger.debug('record inserted for tenant upload');
+				callback(null,true);
+            }
+        });
 	}
 }
 

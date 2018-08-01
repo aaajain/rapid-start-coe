@@ -1,4 +1,7 @@
 var mongoose = require('mongoose');
+var multitenancy = require('mongoose-multitenancy');
+ 
+multitenancy.setup();
 
 var roleSchema = new mongoose.Schema({
   role_name: {
@@ -14,5 +17,5 @@ var roleSchema = new mongoose.Schema({
   }
 });
 
-mongoose.model('role_master',roleSchema);
+mongoose.mtModel('role_master',roleSchema);
 //module.exports.roleSchema = roleSchema;

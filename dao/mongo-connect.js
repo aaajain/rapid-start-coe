@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var multitenancy = require('mongoose-multitenancy');
+multitenancy.setup();
 var settings = require("../config/settings");
 var uri = settings.mongo.url;
 var logger = require('../config/logger.js').getLogger('mongo-connect');
