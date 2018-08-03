@@ -1,11 +1,10 @@
 var mongo = require('../dao/mongo-connect.js');
 var logger = require('../config/logger.js').getLogger('query-utils');
 var constants = require('../util/Constants.js');
-/*var multitenancy = require('mongoose-multitenancy');
- 
-multitenancy.setup();*/
+var async = require('async');
 
-var roleMasterData = {};
+var roleMasterMap = new Object();
+var tenantData = [];
 
 var methods = 
 {
@@ -159,22 +158,39 @@ var methods =
 	},
 	getRoleMasterData: function(callback) {
 		var conn = mongo.client;
-        conn.collection("role_masters").find().toArray(function(err, dbres) {
-            if (err) {
-                logger.error('getRoleMasterData ' + err.stack);
-                callback(err, null);
-            } else if (dbres && dbres.length > 0) {
-                for (var i = 0; i < dbres.length; i++) {
-                    //roleMasterData[dbres[i].role_name] = dbres[i].permissions;
-                    roleMasterData[i] = {"role_name" : dbres[i].role_name , "permissions" : dbres[i].permissions};
-                	//console.log(roleMasterData);
-
-                }
-                callback(null, roleMasterData);
-            } else {
-                callback("no records found", null);
-            }
-        });
+		//conn.collection("tenant_master").find().toArray(function(err, tenants) {
+            	var roleMasterData; 
+            	async.eachSeries(tenantData, function(tenant,asyncCallback){
+            		roleMasterData = [];
+            		conn.collection(tenant.tenant_name+".role_masters").find().toArray(function(err, dbres) {
+            			if(err)
+            			{
+            				logger.error('getRoleMasterData ' + err.stack);
+                			return callback(err, null);
+            			}
+            			else if(dbres && dbres.length > 0)
+            			{
+            				for (var i = 0; i < dbres.length; i++) {
+			                    //roleMasterData[dbres[i].role_name] = dbres[i].permissions;
+			                    roleMasterData[i] = {"role_name" : dbres[i].role_name , "permissions" : dbres[i].permissions};
+			                }
+			                roleMasterMap[tenant.tenant_name]=JSON.stringify(roleMasterData);
+			                asyncCallback();
+            			}
+            			else
+            			{
+            				logger.debug("no records found for "+tenant.name);
+            				asyncCallback();
+            			}	
+            		});
+            	},function(err){
+            		if(err)
+            			callback(err, null);
+            		else
+            			callback(null, roleMasterMap);
+            	});
+            //}
+		//});
     },
     createExceptionRecord: function(batch_id, paramName,
         paramValue,exception_reason, exception_desc, origin, callback) {
@@ -261,20 +277,56 @@ var methods =
             }
 		});	    	
 	},
-	insertTenantMaster : function(tenant,callback){
+	insertTenantMaster : function(tenantJson,callback){
 		var conn = mongo.client;
 		//var tenantMasterObj = {tenant_name : result.tenant_name, status : result.status};
-          conn.collection("tenant_master").insertMany(tenant.result,function(err,resp){
-            if(err){
-                logger.debug(err.stack);
-                callback(err,null);
-            }else{
-                logger.debug('record inserted for tenant upload');
-				callback(null,true);
-            }
-        });
+         conn.db.listCollections().toArray(function(err,names){
+	      		var tenantMasterExist = false
+	      		if(names)
+		      		for (var i = 0; i < names.length; i++) {
+		      			if(names[i].name === 'tenant_master') 
+		      				tenantMasterExist = true 
+		      		}	
+		      	console.log('tenantMasterExist '+tenantMasterExist);
+	      		if (tenantMasterExist)
+		          conn.dropCollection("tenant_master",function(err,result)
+		          {
+		          	if(err)
+		          	{
+		          		logger.error(err.stack);
+		                callback(err,null);
+		          	}
+		          	else
+		          	{
+		          		 insertTenant(tenantJson,callback)
+		          	}
+		          });
+		      else
+		      	insertTenant(tenantJson,callback)
+	      	});
+         
 	}
 }
 
+function insertTenant(tenantJson,callback)
+{
+	var conn = mongo.client;
+	conn.collection("tenant_master").insertMany(tenantJson.tenants,function(err,dbres){
+        if(err){
+            logger.error(err.stack);
+            callback(err,null);
+        }else{
+            logger.debug('record inserted for tenant upload');
+			for (var i = 0; i < dbres.ops.length; i++) {
+                //roleMasterData[dbres[i].role_name] = dbres[i].permissions;
+                tenantData[i] = {"tenant_name" : dbres.ops[i].tenant_name , 
+                				"status" : dbres.ops[i].status,"domain":dbres.ops[i].domain,"cert":dbres.ops[i].cert};
+            }
+			callback(null,tenantData);
+        }
+    });
+}
+
 module.exports.methods = methods;
-module.exports.roleMasterData = roleMasterData;
+module.exports.roleMasterMap = roleMasterMap;
+module.exports.tenantData = tenantData;

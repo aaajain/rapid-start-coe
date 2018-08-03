@@ -1,12 +1,16 @@
 
 {
-	"result" : [{
-		"tenant_name" : "Tenant 1",
-		"status" : "Active"
+	"tenants" : [{
+		"tenant_name" : "Tenant_1",
+		"status" : "Active",
+		"domain":"tenat1.com",
+		"cert":"pemfile1"
 	},
 	{
-		"tenant_name" : "Tenant 2",
-		"status" : "Active"
+		"tenant_name" : "Tenant_2",
+		"status" : "Active",
+		"domain":"tenat1.com",
+		"cert":"pemfile2"
 	}]
 }
 

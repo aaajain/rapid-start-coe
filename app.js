@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({limit: '50mb'})); 
 //Code added for resolving cors issue.
 //var fs = require('fs');
-var tenant = require('./config/uploadTenants.json');
+var tenantJson = require('./config/uploadTenants.json');
 
 app.use(function (req, res, next) {
 
@@ -54,8 +54,8 @@ allRoutes.forEach(function(routes) {
 });*/
 mongo.connection.createConnection(function(err,db)
 {
-	//var obj = JSON.parse(fs.readFileSync('./config/uploadTenants.json', 'utf8'));
-	queryUtils.methods.insertTenantMaster(tenant,function(err,data){
+	console.log('db connect state '+mongo.client.readyState);
+	queryUtils.methods.insertTenantMaster(tenantJson,function(err,tenantData){
 		if(err)
 		{
 			logger.error('error while inserting entry in tenant_master table');
@@ -63,85 +63,75 @@ mongo.connection.createConnection(function(err,db)
 		else
 		{
 			//async.eachseries
-			async.eachSeries(tenant.result, function(tenant,asyncCallback){
-			console.log('db connect state '+mongo.client.readyState);
-			async.parallel({
-			    createAdmin: function(callback) {
-			    	var role_name = "admin",
-			    		permissions = ['view','create','modify','delete'];
-			    	queryUtils.methods.insertRoleMasters(role_name,permissions,tenant.tenant_name,function(err,data){
-			    		if(err)
-			    		{
-			    			callback(err, null);
-			    		}
-			    		else
-			    		{
-					    	queryUtils.methods.createAdminUser(tenant.tenant_name,function(err,data){
-					    		if(err)
-					    		{
-					    			callback(err, null);
-					    		}
-					    		else
-					    		{
-					    			callback(null, true);
-					    		}
-					    	});
-			    		}
-			    	});
-			    }//,
-			    /*getRoleMasterData: function(callback) {
-		    	queryUtils.methods.getRoleMasterData(function(err,data)
-				{
-					if(!err)
-					{
-						callback(null, true);
+			async.eachSeries(tenantData, function(tenant,asyncCallback){
+				async.parallel({
+				    createAdmin: function(callback) {
+				    	var role_name = "admin",
+				    		permissions = ['view','create','modify','delete'];
+				    	queryUtils.methods.insertRoleMasters(role_name,permissions,tenant.tenant_name,function(err,data){
+				    		if(err)
+				    		{
+				    			callback(err, null);
+				    		}
+				    		else
+				    		{
+						    	queryUtils.methods.createAdminUser(tenant.tenant_name,function(err,data){
+						    		if(err)
+						    		{
+						    			callback(err, null);
+						    		}
+						    		else
+						    		{
+						    			callback(null, true);
+						    		}
+						    	});
+				    		}
+				    	});
+				    }
+				  }, function(err, results) {
+				    // results is now equals to: {one: 1, two: 2}
+				    if(!err)
+				    {
+						asyncCallback();
 					}
 					else
 					{
-						console.log(err.stack);
-						callback(err, null);
+						logger.error('error occurred', err.stack);
+						throw err;
 					}
 				});
-		    }*/
-			}, function(err, results) {
-			    // results is now equals to: {one: 1, two: 2}
-			    if(!err)
-			    {
-					/*queryUtils.methods.checkUserPermissionForAction('admin',function(err,data){ 
-						console.log(err);
-					});*/
-					asyncCallback();
+			},
+			function(err){
+				if(err)
+				{
+					logger.error('error occured while inserting tenant');
 				}
 				else
 				{
-					//log the error
-					logger.error('error occurred', err.stack);
-					//exit
-					process.exit(1);
+						//cache master datq
+						queryUtils.methods.getRoleMasterData(function(err,data)
+						{
+							if(err)
+							{
+								logger.error('error occurred', err.stack);
+								throw err;
+							}
+							else
+							{
+								var port = settings.appPort;
+						    	var server = http.createServer(app); 
+								var setRequestTimeOut = server.listen(port,function(err)
+								{
+									if(err) throw err;
+									console.log('app listening on port ' + port + '!')
+								});
+								setRequestTimeOut.timeout = settings.timeOut;
+								console.log(queryUtils.roleMasterMap);
+								console.log(queryUtils.tenantData);
+							}
+						});
 				}
 			});
-		},
-		function(err){
-			if(err)
-			{
-				logger.error('error occured while inserting tenant');
-			}
-			else
-			{
-				logger.debug('tenant function completed');
-				console.log('tenant function completed');
-
-			    	var port = settings.appPort;
-			    	var server = http.createServer(app); 
-					var setRequestTimeOut = server.listen(port,function(err)
-					{
-						if(err) throw err;
-						console.log('app listening on port ' + port + '!')
-					});
-					setRequestTimeOut.timeout = settings.timeOut;
-					console.log(queryUtils.roleMasterData);
-			}
-		});
 		}
 	});
 });
