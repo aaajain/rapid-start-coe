@@ -15,7 +15,8 @@ router.get('/getAllUsers', function getAllUsers(req, res) {
      	var conn = mongo.client;
         var args = {
             action : constants.VIEW,
-            user : req.query.logged_in_user
+            user : req.query.logged_in_user,
+            tenant_name : req.query.tenant_name
         }
         AuthorizationHelper.auth(args, function(err, dbres) {
             if (err) {
@@ -23,7 +24,7 @@ router.get('/getAllUsers', function getAllUsers(req, res) {
                 res.status(500).send('Cound not fetch data');
             } else if (dbres) { //dbres is either true or false
                 logger.debug(dbres);
-                queryUtils.methods.getAllUsers(function(ierr,result){
+                queryUtils.methods.getAllUsers(args.tenant_name,function(ierr,result){
                     if(ierr){
                         res.send('ERROR' + ierr.stack);
                     }else{
@@ -33,6 +34,7 @@ router.get('/getAllUsers', function getAllUsers(req, res) {
                     }
                 });
             } else {
+            logger.debug(dbres);
                 res.send(JSON.stringify({
                     "result": "FAILURE"
                 }));

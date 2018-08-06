@@ -65,61 +65,94 @@ var methods =
 	    	}
 		});
 	},
-	checkUserPermissionForAction: function(user,callback)
+	checkUserPermissionForAction: function(user, tenant_name, callback)
 	{
 		var conn = mongo.client;
+		var tenantExist = false;
 		//get user role
 		//const admin_user= conn.model('user_master');
-		conn.collection("user_masters").find({ username: user }).toArray(function(err, result) {
-			logger.debug(result);
-			if(err)
-			{
-				logger.debug(err.stack);
-				callback(err,null);
+		tenantData.forEach(function(tenant){
+			logger.debug(tenant.tenant_name);
+			logger.debug('tenant_name is',tenant_name);
+			if(tenant.tenant_name == tenant_name){
+				tenantExist = true;
 			}
-			else if(result && result.length > 0)
-			{
-				var roleId = result[0].role;
-				if(roleId)
+		});
+		if(tenantExist)
+		{
+			console.log('user '+user);
+			conn.collection(tenant_name+".user_masters").find({ username: user }).toArray(function(err, result) {
+				logger.debug(result);
+				if(err)
 				{
-					conn.model("role_master").findById(roleId,function(err,role){
-						logger.debug(role);
-						if(err)
-						 {
-						 	logger.debug(err.stack);
-						 	callback(err,null);
-						 }
-						 else
-						 {
-						 	logger.debug('role found');
-						 	callback(null,role.permissions);
-						 }
-					});
+					logger.debug(err.stack);
+					callback(err,null);
 				}
-			}
-			else
-			{
-				logger.error('record not found');
-				callback(null,false);
-			}
+				else if(result && result.length > 0)
+				{
+					var roleId = result[0].role;
+					logger.debug(roleId);
+					if(roleId)
+					{
+						conn.collection(tenant_name+".role_masters").find({_id: roleId}).toArray(function(err,role){
+							//logger.debug(role);
+							if(err)
+							 {
+							 	logger.debug(err.stack);
+							 	callback(err,null);
+							 }
+							 else
+							 {
+							 	logger.debug('role found');
+							 	logger.debug('role is', role);
+							 	callback(null,role[0].permissions);
+							 }
+						});
+					}
+				}
+				else
+				{
+					logger.error('record not found');
+					callback(null,false);
+				}
 
-		});
+			});
+		}
+		else
+		{
+			logger.debug('tenant does not exist');
+			callback(null,false);
+		}
 	},
-	getAllUsers : function(callback){
+	getAllUsers : function(tenant,callback){
 		var conn = mongo.client;
-		conn.collection("user_masters").find().toArray(function(err, result) {
-			logger.debug(result);
-			if(err)
+		//conn.collection("tenant_master").find({ tenant_name: tenant.tenant_name }).toArray(function(err, result) {
+			/*if (err)
 			{
-				logger.error(err.stack);
-				callback(err,null);
-			}
-			else
-			{
-				logger.debug('data fetched');
-				callback(null,result);
-			}
-		});
+				logger.debug('tenant not found');
+	    		callback(null,false);
+			}*/
+	    	//else if(result && result.length > 0){
+	    		conn.collection(tenant+".user_masters").find().toArray(function(err, result) {
+					logger.debug(result);
+					if(err)
+					{
+						logger.error(err.stack);
+						callback(err,null);
+					}
+					else
+					{
+						logger.debug('data fetched');
+						callback(null,result);
+					}
+				});
+	    	//}
+	    	/*else
+	    	{
+	    		logger.debug('tenant not found');
+	    		callback(null,false);
+	    	}*/
+		//});
 	},
 	insertRoleMasters : function(role_name,permissions,tenant,callback){
 		var conn = mongo.client;

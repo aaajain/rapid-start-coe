@@ -7,7 +7,8 @@ var authorize =
 	{
 		var user = args.user;
 		var action = args.action;
-		queryUtils.methods.checkUserPermissionForAction(user,function(err,permissions){
+		var tenant_name = args.tenant_name;
+		queryUtils.methods.checkUserPermissionForAction(user, tenant_name,function(err,permissions){
 			if(err)
 			{
 				logger.debug(err.stack);
@@ -15,6 +16,8 @@ var authorize =
 			}
 			else
 			{
+				console.log(action);
+				console.log(permissions);
 				if(permissions && permissions.indexOf(action) >=0 )
 			 	{
 			 		logger.debug("user has access");
