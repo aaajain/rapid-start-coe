@@ -242,9 +242,9 @@ var methods =
             		});
         	});
     },
-    userBatchUpload : function(key,callback){
+    userBatchUpload : function(key,tenant,callback){
 		var conn = mongo.client;
-		conn.collection("role_masters").find({ role_name: key.role_name }).toArray(function(err, result) {
+		conn.collection(tenant+".role_masters").find({ role_name: key.role_name }).toArray(function(err, result) {
 			if (err)
 			{
 				logger.debug('role not found');
@@ -253,7 +253,7 @@ var methods =
 	    	else if(result && result.length > 0){
 	    		var roleId = result[0]._id;
 	    		var userObj = { username : key.username, email : key.email, password : key.password, role : roleId };
-	    		conn.collection("user_masters").insertOne(userObj,function(err,res){
+	    		conn.collection(tenant+".user_masters").insertOne(userObj,function(err,res){
 	    			if(err){
 		                logger.debug(err.stack);
 		                callback(err,null);
