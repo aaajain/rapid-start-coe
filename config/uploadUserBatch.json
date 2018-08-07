@@ -4,121 +4,141 @@
 		"username" : "Raj",
 		"email" : "raj@raj.com",
 		"password" : "raj",
-		"role_name" : "Intern"
+		"role_name" : "Intern",
+		"tenant_name" : "Tenant_1"
 	},
 	{
 		"username" : "John",
 		"email" : "john@john.com",
 		"password" : "john",
-		"role_name" : "Architect"
+		"role_name" : "Architect",
+		"tenant_name" : "Tenant_2"
 	},
 	{
 		"username" : "Alex",
 		"email" : "alex@alex.com",
 		"password" : "alex",
-		"role_name" : "Lead"
+		"role_name" : "Lead",
+		"tenant_name" : "Tenant_2"
 	},
 	{
 		"username" : "suraj",
 		"email" : "suraj@suraj.com",
 		"password" : "suraj",
-		"role_name" : "Intern"
+		"role_name" : "Intern",
+		"tenant_name" : "Tenant_1"
 	},
 	{
 		"username" : "parth",
 		"email" : "parth@parth.com",
 		"password" : "parth",
-		"role_name" : "admin"
+		"role_name" : "admin",
+		"tenant_name" : "Tenant_1"
 	},
 	{
 		"username" : "prjyot",
 		"email" : "prajyot@prajyot.com",
 		"password" : "prajyot",
-		"role_name" : "Lead"
+		"role_name" : "Lead",
+		"tenant_name" : "Tenant_1"
 	},
 	{
 		"username" : "Vishal",
 		"email" : "vishal@vishal.com",
 		"password" : "vishal",
-		"role_name" : "Intern"
+		"role_name" : "Intern",
+		"tenant_name" : "Tenant_2"
 	},
 	{
 		"username" : "Arinjay",
 		"email" : "arinjay@arinjay.com",
 		"password" : "arinjay",
-		"role_name" : "Architect"
+		"role_name" : "Architect",
+		"tenant_name" : "Tenant_2"
 	},
 	{
 		"username" : "Sandeep",
 		"email" : "sandeep@sandeep.com",
 		"password" : "sandeep",
-		"role_name" : "admin"
+		"role_name" : "admin",
+		"tenant_name" : "Tenant_2"
 	},
 	{
 		"username" : "Pydi",
 		"email" : "pydi@pydi.com",
 		"password" : "pydi",
-		"role_name" : "Intern"
+		"role_name" : "Intern",
+		"tenant_name" : "Tenant_1"
 	},
 	{
 		"username" : "Rex",
 		"email" : "rex@rex.com",
 		"password" : "rex",
-		"role_name" : "Intern"
+		"role_name" : "Intern",
+		"tenant_name" : "Tenant_2"
 	},
 	{
 		"username" : "Vivek",
 		"email" : "vivek@vivek.com",
 		"password" : "vivek",
-		"role_name" : "Lead"
+		"role_name" : "Lead",
+		"tenant_name" : "Tenant_1"
 	},
 	{
 		"username" : "Sayali",
 		"email" : "sayali@sayali.com",
 		"password" : "sayali",
-		"role_name" : "Architect"
+		"role_name" : "Architect",
+		"tenant_name" : "Tenant_2"
 	},
 	{
 		"username" : "Pratik",
 		"email" : "pratik@pratik.com",
 		"password" : "pratik",
-		"role_name" : "Lead"
+		"role_name" : "Lead",
+		"tenant_name" : "Tenant_1"
 	},
 	{
 		"username" : "Amrutha",
 		"email" : "amrutha@amrutha.com",
 		"password" : "amrutha",
-		"role_name" : "Architect"
+		"role_name" : "Architect",
+		"tenant_name" : "Tenant_2"
 	},
 	{
 		"username" : "Sailadhirajendranath",
 		"email" : "kayal@kayal.com",
 		"password" : "kayal",
-		"role_name" : "admin"
+		"role_name" : "admin",
+		"tenant_name" : "Tenant_1"
 	},
 	{
 		"username" : "Nitendra",
 		"email" : "nitendra@nitedra.com",
 		"password" : "nitendra",
-		"role_name" : "Lead"
+		"role_name" : "Lead",
+		"tenant_name" : "Tenant_2"
 	},
 	{
 		"username" : "Ashraf",
 		"email" : "ashraf@ashraf.com",
 		"password" : "ashraf",
-		"role_name" : "admin"
+		"role_name" : "admin",
+		"tenant_name" : "Tenant_1"
 	},
 	{
 		"username" : "Jyoti",
 		"email" : "jyoti@jyoti.com",
 		"password" : "jyoti",
-		"role_name" : "admin"
+		"role_name" : "admin",
+		"tenant_name" : "Tenant_2"
 	},
 	{
 		"username" : "Veera",
 		"email" : "veera@veera.com",
 		"password" : "veera",
-		"role_name" : "Lead"
+		"role_name" : "Lead",
+		"tenant_name" : "Tenant_1"
 	}]
 }
 

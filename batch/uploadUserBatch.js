@@ -47,7 +47,7 @@ mongo.connection.createConnection(function(err,db){
 						var salt = bcrypt.genSaltSync(constants.SALT_ROUNDS);
 				        var hash = bcrypt.hashSync(key.password, salt);
 				        key.password = hash;
-						queryUtils.methods.userBatchUpload(key,function(err,data){
+						queryUtils.methods.userBatchUpload(key,key.tenant_name,function(err,data){
 				    		if(err)
 				    		{
 				    			var exception_reason = err.message;
