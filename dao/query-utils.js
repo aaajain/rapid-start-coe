@@ -126,33 +126,19 @@ var methods =
 	},
 	getAllUsers : function(tenant,callback){
 		var conn = mongo.client;
-		//conn.collection("tenant_master").find({ tenant_name: tenant.tenant_name }).toArray(function(err, result) {
-			/*if (err)
+		conn.collection(tenant+".user_masters").find().toArray(function(err, result) {
+			logger.debug(result);
+			if(err)
 			{
-				logger.debug('tenant not found');
-	    		callback(null,false);
-			}*/
-	    	//else if(result && result.length > 0){
-	    		conn.collection(tenant+".user_masters").find().toArray(function(err, result) {
-					logger.debug(result);
-					if(err)
-					{
-						logger.error(err.stack);
-						callback(err,null);
-					}
-					else
-					{
-						logger.debug('data fetched');
-						callback(null,result);
-					}
-				});
-	    	//}
-	    	/*else
-	    	{
-	    		logger.debug('tenant not found');
-	    		callback(null,false);
-	    	}*/
-		//});
+				logger.error(err.stack);
+				callback(err,null);
+			}
+			else
+			{
+				logger.debug('data fetched');
+				callback(null,result);
+			}
+		});
 	},
 	insertRoleMasters : function(role_name,permissions,tenant,callback){
 		var conn = mongo.client;
@@ -166,13 +152,13 @@ var methods =
             }
         });
 	},
-	insertUserMasters : function(username,email,password,role_name,callback){
+	insertUserMasters : function(username,email,password,role_name,tenant,callback){
 		var conn = mongo.client;
-		conn.collection("role_masters").find({ role_name: role_name }).toArray(function(err, result) {
+		conn.collection(tenant+".role_masters").find({ role_name: role_name }).toArray(function(err, result) {
 			if (err) throw err;
 	    	else if(result && result.length > 0){
 	    		var roleId = result[0]._id;
-	    		conn.collection("user_masters").findOneAndUpdate({username : username},{$set : {username : username, email : email, password : password, role:roleId}},{upsert: true, new: true, runValidators: true},function(err,res){
+	    		conn.collection(tenant+".user_masters").findOneAndUpdate({username : username},{$set : {username : username, email : email, password : password, role:roleId}},{upsert: true, new: true, runValidators: true},function(err,res){
 	    			if(err){
 		                logger.debug(err.stack);
 		                callback(err,null);

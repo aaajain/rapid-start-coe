@@ -58,7 +58,8 @@ try {
         logger.debug(hash);
         var args = {
             action : constants.CREATE,
-            user : req.body.logged_in_user
+            user : req.body.logged_in_user,
+            tenant_name : req.body.tenant_name
         }
         AuthorizationHelper.auth(args, function(err, dbres) {
             if (err) {
@@ -66,7 +67,7 @@ try {
                 res.status(500).send('Error occured while determining user permissions');
             } else if (dbres) { //dbres is either true or false
                 logger.debug(dbres);
-                queryUtils.methods.insertUserMasters(username,email,hash,role_name,function(ierr,result){
+                queryUtils.methods.insertUserMasters(username,email,hash,role_name,args.tenant_name,function(ierr,result){
                     if(ierr){
                         res.send('ERROR' + ierr.stack);
                     }else{
