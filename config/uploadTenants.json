@@ -4,13 +4,13 @@
 		"tenant_name" : "Tenant_1",
 		"status" : "Active",
 		"domain":"tenat1.com",
-		"cert":"pemfile1"
+		"cert":"/cert-store/tenant_1.json"
 	},
 	{
 		"tenant_name" : "Tenant_2",
 		"status" : "Active",
 		"domain":"tenat1.com",
-		"cert":"pemfile2"
+		"cert":"/cert-store/tenant_2.json"
 	}]
 }
 
