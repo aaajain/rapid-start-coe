@@ -2,6 +2,7 @@ var mongo = require('../dao/mongo-connect.js');
 var logger = require('../config/logger.js').getLogger('query-utils');
 var constants = require('../util/Constants.js');
 var async = require('async');
+var bcrypt = require('bcrypt');
 
 var roleMasterMap = new Object();
 var tenantData = [];
@@ -38,6 +39,9 @@ var methods =
 	},
 	createAdminUser: function(tenant,callback){
 		var conn = mongo.client;
+		const dummyPassword = 'test';
+		var salt = bcrypt.genSaltSync(constants.SALT_ROUNDS);
+		var hash = bcrypt.hashSync(dummyPassword, salt);
 		//const admin_user= conn.mtModel(tenant+'.user_master');
 		conn.collection(tenant+".role_masters").find({ role_name: 'admin' }).toArray(function(err, result) {
 	    	if (err) throw err;
@@ -45,7 +49,7 @@ var methods =
 	    	{
 	    		var roleId = result[0]._id;
 	    		//const admin = new admin_user({ email: 'admin@admin.com',username:'admin',password:'test',role:roleId});
-	    		conn.collection(tenant+".user_masters").findOneAndUpdate({username:'admin'},{$set: { email: 'admin@admin.com',username:'admin',password:'test',role:roleId}},{upsert: true, new: true, runValidators: true},function (err,doc) {
+	    		conn.collection(tenant+".user_masters").findOneAndUpdate({username:'admin'},{$set: { email: 'admin@admin.com',username:'admin',password:hash,role:roleId}},{upsert: true, new: true, runValidators: true},function (err,doc) {
 					 if(err)
 					 {
 					 	logger.debug(err.stack);
