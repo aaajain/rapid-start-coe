@@ -11,6 +11,7 @@
     "chai-http": "^2.0.1",
     "express": "^4.15.3",
     "glob": "^7.1.2",
+    "jsonwebtoken": "^8.3.0",
     "log4js": "0.6.38",
     "mocha": "5.1.0",
     "mongodb": "^3.1.1",

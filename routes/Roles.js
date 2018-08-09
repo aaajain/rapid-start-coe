@@ -18,7 +18,8 @@ try {
         var args = {
             action : constants.CREATE,
             user : req.body.logged_in_user,
-            tenant_name : req.body.tenant_name
+            tenant_name : req.body.tenant_name,
+            authToken:req.headers.authorization //token
         }
         AuthorizationHelper.auth(args, function(err, dbres) {
             if (err) {

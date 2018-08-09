@@ -7,7 +7,8 @@ var settings = {
 "logLevel" : 'DEBUG',
 "appPort": "9090",
 "timeOut": 500,
-"mockPort":3333
+"mockPort":3333,
+"auth_expiration":'1h'
 }
 
 module.exports =settings;

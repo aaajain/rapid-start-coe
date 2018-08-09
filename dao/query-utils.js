@@ -73,18 +73,17 @@ var methods =
 	{
 		var conn = mongo.client;
 		var tenantExist = false;
+		var tenantCertPath;
 		//get user role
 		//const admin_user= conn.model('user_master');
 		tenantData.forEach(function(tenant){
-			logger.debug(tenant.tenant_name);
-			logger.debug('tenant_name is',tenant_name);
 			if(tenant.tenant_name == tenant_name){
 				tenantExist = true;
+				tenantCertPath = tenant.cert;
 			}
 		});
 		if(tenantExist)
 		{
-			console.log('user '+user);
 			conn.collection(tenant_name+".user_masters").find({ username: user }).toArray(function(err, result) {
 				logger.debug(result);
 				if(err)
@@ -110,7 +109,7 @@ var methods =
 							 {
 							 	logger.debug('role found');
 							 	logger.debug('role is', role);
-							 	var result = {permissions:role[0].permissions, dbPwd:hashedPwd}
+							 	var result = {permissions:role[0].permissions, dbPwd:hashedPwd,tenantCertPath:tenantCertPath}
 							 	callback(null,result);
 							 }
 						});
