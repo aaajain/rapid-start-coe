@@ -88,4 +88,40 @@ try {
     }
 });
 
+router.post('/login',function(req,res){
+    var conn = mongo.client;
+    var username = req.body.username;
+    var password = req.body.password;
+    //var salt = bcrypt.genSaltSync(constants.SALT_ROUNDS);
+    //ar hashedPwd = bcrypt.hashSync(password, salt);
+    var tenant_name = req.body.tenant_name;
+    queryUtils.methods.checkUserPermissionForAction(username,tenant_name,function(err,data){
+        if(err)
+        {
+            logger.error('invalid login details '+err.stack);
+            res.status(403).send('invalid credentials');
+        }
+        else if(data)
+        {
+            //set the jwt
+            logger.debug(data);
+            var dbPwd = data.dbPwd;
+            bcrypt.compare(password, dbPwd, function(err, hashres) {
+            if(hashres) {
+                logger.debug('login successful');
+                res.send('login successful');
+              } else {
+                logger.debug('invalid credentials');
+                res.status(403).send('invalid credentials');
+              } 
+            });
+        }
+        else
+        {
+            logger.error('invalid login details');
+            res.status(403).send('invalid credentials');
+        }
+    })
+});
+
 module.exports = router;
