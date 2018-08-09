@@ -37,10 +37,8 @@ router.get('/getAllUsers', function getAllUsers(req, res) {
                     }
                 });
             } else {
-            logger.debug(dbres);
-                res.send(JSON.stringify({
-                    "result": "fail"
-                }));
+                logger.debug(dbres);
+                res.status(403).send('invalid user');
             }
         });
     } catch (e) {
@@ -76,14 +74,12 @@ try {
                         res.send('ERROR' + ierr.stack);
                     }else{
                         res.send(JSON.stringify({
-                        "result": "SUCCESS"
+                        "result": "done"
                 }));
                     }
                 });
             } else {
-                res.send(JSON.stringify({
-                    "result": "FAILURE"
-                }));
+                res.status(403).send('invalid user');
             }
         });
     } catch (e) {
