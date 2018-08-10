@@ -27,14 +27,12 @@ var authorize =
 				  if(err)
 				  {
 				  	  logger.error("invalid token "+err.stack);
-					  callback(null,false);
+					  callback(err,false);
 				  }
 				  else
 				  {
 				  	  var logged_in_user = decoded.username;
 					  var permissions = decoded.permissions;
-					  console.log('logged_in_user '+logged_in_user);
-					  console.log(permissions);
 					  if(logged_in_user != user)
 					  {
 					  		logger.error("invalid logged_in_user")
