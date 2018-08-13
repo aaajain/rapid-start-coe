@@ -11,4 +11,6 @@ var settings = {
 "auth_expiration":'1h'
 }
 
+//mongo cluster start command : mongo "mongodb://chenoacluster-shard-00-00-7on4g.mongodb.net:27017,chenoacluster-shard-00-01-7on4g.mongodb.net:27017,chenoacluster-shard-00-02-7on4g.mongodb.net:27017/test?replicaSet=ChenoaCluster-shard-0" --ssl --authenticationDatabase admin --username admin --password admin
+
 module.exports =settings;
