@@ -30,7 +30,7 @@ var exceptionHandler = {
 		{
 			stack = stack.substr(stack.length - 400);
 		}
-		logger.debug('trimStack: '+stack);
+		//logger.debug('trimStack: '+stack);
 		return stack;
 	}
 }
