@@ -17,6 +17,7 @@ var tenantJson = require('./config/uploadTenants.json');
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
+    //never specify * -- important
     res.setHeader('Access-Control-Allow-Origin', '*');
 
     // Request methods you wish to allow

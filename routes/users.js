@@ -12,7 +12,7 @@ var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
 
-router.get('/getAllUsers', function getAllUsers(req, res) {
+router.get('/Users', function getAllUsers(req, res) {
      try {
      	var conn = mongo.client;
         var args = {
@@ -47,7 +47,7 @@ router.get('/getAllUsers', function getAllUsers(req, res) {
     }
 });
 
-router.post('/createUser', function userActionForUserMaster(req, res) {    
+router.post('/User', function userActionForUserMaster(req, res) {    
 try {
         var conn = mongo.client;
         var username = req.body.username;
