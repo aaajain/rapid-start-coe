@@ -270,8 +270,9 @@ var methods =
 	    	}
 	    	else
 	    	{
-	    		logger.debug('role not found');
-	    		callback(null,false);
+	    		logger.error('role not found');
+	    		var err = new Error('role not found');
+	    		callback(err,null);
 	    	}
 		});
 	},

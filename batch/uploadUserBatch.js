@@ -52,7 +52,7 @@ mongo.connection.createConnection(function(err,db){
 				    		{
 				    			var exception_reason = err.message;
 							    var exception_desc = exc.trimStack(err.stack);
-							    exc.insertException(batch_id,constants.USER_NAME,key.username,"error occured while inserting the record", exception_desc, constants.NODE, function(dberr) 
+							    exc.insertException(batch_id,constants.USER_NAME,key.username, exception_reason, exception_desc, constants.NODE, function(dberr) 
 							    {
 							        if (dberr) 
 							        {
