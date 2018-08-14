@@ -1,17 +1,17 @@
 const express = require('express');
 var bodyParser = require('body-parser');
 var http = require("http");
-var settings =require('../config/settings.js');
-var logger = require('../config/logger.js').getLogger('uploadUser');
-var mongo = require('../dao/mongo-connect.js');
-var constants = require('../util/Constants.js');
-var userMap = require('../config/uploadUserBatch.json');
+var settings =require('./config/settings.js');
+var logger = require('./config/logger.js').getLogger('uploadUser');
+var mongo = require('./dao/mongo-connect.js');
+var constants = require('./util/Constants.js');
+var userMap = require('./config/uploadUserBatch.json');
 var fs = require('fs');
-var queryUtils = require('../dao/query-utils.js');
+var queryUtils = require('./dao/query-utils.js');
 var async = require('async');
 const app = express();
 var bcrypt = require('bcrypt');
-var exc = require('../util/Exception.js');
+var exc = require('./util/Exception.js');
 
 var globSync = require('glob').sync;
 
@@ -21,8 +21,7 @@ globSync('./models/**/*.js', {
 }).map(require);
 
 mongo.connection.createConnection(function(err,db){
-	var obj = JSON.parse(fs.readFileSync('../config/uploadUserBatch.json', 'utf8'));
-	queryUtils.methods.insertBatchMaster(obj.result.length,function(err,data)
+	queryUtils.methods.insertBatchMaster(userMap.result.length,function(err,data)
 	{
 		if(err)
 		{
@@ -33,7 +32,7 @@ mongo.connection.createConnection(function(err,db){
 		{
 			var conn = mongo.client;
 			var batch_id = data;
-			async.eachSeries(obj.result, function(key,asyncCallback){
+			async.eachSeries(userMap.result, function(key,asyncCallback){
 				//insert in batch execution with Y
 				queryUtils.methods.insertBatchExecutionStatus(key,batch_id,function(ierr,ires){
 					if(ierr)
