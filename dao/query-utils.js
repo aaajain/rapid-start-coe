@@ -257,8 +257,8 @@ var methods =
 			}
 	    	else if(result && result.length > 0){
 	    		var roleId = result[0]._id;
-	    		var userObj = { username : key.username, email : key.email, password : key.password, role : roleId };
-	    		conn.collection(tenant+".user_masters").insertOne(userObj,function(err,res){
+	    		//var userObj = { username : key.username, email : key.email, password : key.password, role : roleId };
+	    		conn.collection(tenant+".user_masters").findOneAndUpdate({username : key.username},{$set : {username : key.username, email : key.email, password : key.password, role:roleId}},{upsert: true, new: true, runValidators: true},function(err,res){
 	    			if(err){
 		                logger.debug(err.stack);
 		                callback(err,null);
