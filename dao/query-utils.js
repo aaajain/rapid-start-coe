@@ -129,9 +129,9 @@ var methods =
 			callback(null,false);
 		}
 	},
-	getAllUsers : function(tenant,callback){
+	getAllUsers : function(tenant,offset,limit,callback){
 		var conn = mongo.client;
-		conn.collection(tenant+".user_masters").find().toArray(function(err, result) {
+		conn.collection(tenant+".user_masters").find().skip(offset).limit(limit).toArray(function(err, result) {
 			logger.debug(result);
 			if(err)
 			{

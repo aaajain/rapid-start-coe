@@ -15,6 +15,8 @@ var fs = require('fs');
 router.get('/Users', function getAllUsers(req, res) {
      try {
      	var conn = mongo.client;
+        var offset = Number(req.query.offset);
+        var limit = Number(req.query.limit);
         var args = {
             action : constants.VIEW,
             user : req.query.logged_in_user,
@@ -27,7 +29,7 @@ router.get('/Users', function getAllUsers(req, res) {
                 res.status(500).send('Cound not fetch data');
             } else if (dbres) { //dbres is either true or false
                 logger.debug(dbres);
-                queryUtils.methods.getAllUsers(args.tenant_name,function(ierr,result){
+                queryUtils.methods.getAllUsers(args.tenant_name,offset,limit,function(ierr,result){
                     if(err){
                         res.send('ERROR' + ierr.stack);
                     }else{
