@@ -6,6 +6,7 @@ var queryUtils = require('./dao/query-utils.js');
 var async = require('async');
 var logger = require('./config/logger.js').getLogger('app.js');
 var mongo = require('./dao/mongo-connect.js');
+var authorizer = require('./helper/authorization.js');
 const app = express();
 app.use(bodyParser.json());
 /* Added below for CMS Rebate CR for request payload more that 0.1 MB*/
@@ -37,6 +38,9 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.use(authorizer.authorizeInterceptor());
+
+
 var globSync = require('glob').sync;
 
 //require all models
@@ -53,6 +57,7 @@ allRoutes.forEach(function(routes) {
 /*app.listen(3000, function clearMajorityCheckBasedOnWQ() {
   console.log('Example app listening on port 3000!')
 });*/
+
 mongo.connection.createConnection(function(err,db)
 {
 	console.log('db connect state '+mongo.client.readyState);

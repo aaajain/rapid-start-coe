@@ -10,7 +10,7 @@ var router = express.Router();
 var constants = require('../util/Constants.js');
 var bcrypt = require('bcrypt');
 
-router.post('/Role', function userRoleActionForRoleMaster(req, res) {    
+router.post('/role', function userRoleActionForRoleMaster(req, res) {    
 try {
         var conn = mongo.client;
         var role_name = req.body.role_name;

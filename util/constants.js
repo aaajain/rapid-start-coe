@@ -4,7 +4,8 @@ var constants = {
 "UPLOAD_USERS_BATCH" : "upload_users_batch",
 "NODE" : "node",
 "USER_NAME":"username",
-"SALT_ROUNDS" : 4
+"SALT_ROUNDS" : 4,
+"MODIFY": "modify"
 }
 
 module.exports =constants;

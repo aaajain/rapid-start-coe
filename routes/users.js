@@ -12,7 +12,7 @@ var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
 
-router.get('/Users', function getAllUsers(req, res) {
+router.get('/users', function getAllUsers(req, res) {
      try {
      	var conn = mongo.client;
         var offset = Number(req.query.offset);
@@ -25,8 +25,8 @@ router.get('/Users', function getAllUsers(req, res) {
         }
         AuthorizationHelper.auth(args, function(err, dbres) {
             if (err) {
-                logger.error('getAllUsers: error in fetching record');
-                res.status(500).send('Cound not fetch data');
+                logger.error('not authorized '+err.stack);
+                res.status(403).send('not authorized');
             } else if (dbres) { //dbres is either true or false
                 logger.debug(dbres);
                 queryUtils.methods.getAllUsers(args.tenant_name,offset,limit,function(ierr,result){
@@ -49,7 +49,7 @@ router.get('/Users', function getAllUsers(req, res) {
     }
 });
 
-router.post('/User', function userActionForUserMaster(req, res) {    
+router.post('/user', function userActionForUserMaster(req, res) {    
 try {
         var conn = mongo.client;
         var username = req.body.username;
