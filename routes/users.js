@@ -17,35 +17,17 @@ router.get('/users', function getAllUsers(req, res) {
      	var conn = mongo.client;
         var offset = Number(req.query.offset);
         var limit = Number(req.query.limit);
-        var args = {
-            action : constants.VIEW,
-            user : req.query.logged_in_user,
-            tenant_name : req.query.tenant_name,
-            authToken:req.headers.authorization //token
-        }
-        AuthorizationHelper.auth(args, function(err, dbres) {
-            if (err) {
-                logger.error('not authorized '+err.stack);
-                res.status(403).send('not authorized');
-            } else if (dbres) { //dbres is either true or false
-                logger.debug(dbres);
-                queryUtils.methods.getAllUsers(args.tenant_name,offset,limit,function(ierr,result){
-                    if(err){
-                        res.send('ERROR' + ierr.stack);
-                    }else{
-                        res.send(JSON.stringify({
-                        "result": result
-                    }));
-                    }
-                });
-            } else {
-                logger.debug(dbres);
-                res.status(403).send('invalid user');
+        queryUtils.methods.getAllUsers(req.query.tenant_name,offset,limit,function(ierr,result){
+            if(ierr){
+                logger.error(ierr.stack);
+                res.status(500).send('technical error occured');
+            }else{
+                res.send(JSON.stringify({"result": result}));
             }
         });
     } catch (e) {
         logger.error(e.stack);
-        res.status(500).send('technical error occured while fetching record from user_masters table');
+        res.status(500).send('technical error occured');
     }
 });
 
@@ -58,35 +40,17 @@ try {
         var password = req.body.password;
         var salt = bcrypt.genSaltSync(constants.SALT_ROUNDS);
         var hash = bcrypt.hashSync(password, salt);
-        logger.debug(hash);
-        var args = {
-            action : constants.CREATE,
-            user : req.body.logged_in_user,
-            tenant_name : req.body.tenant_name,
-            authToken:req.headers.authorization //token
-        }
-        AuthorizationHelper.auth(args, function(err, dbres) {
-            if (err) {
-                logger.error('userActionForUserMaster: error in userActionForUserMaster');
-                res.status(500).send('Error occured while determining user permissions');
-            } else if (dbres) { //dbres is either true or false
-                logger.debug(dbres);
-                queryUtils.methods.insertUserMasters(username,email,hash,role_name,args.tenant_name,function(ierr,result){
-                    if(ierr){
-                        res.send('ERROR' + ierr.stack);
-                    }else{
-                        res.send(JSON.stringify({
-                        "result": "done"
-                }));
-                    }
-                });
-            } else {
-                res.status(403).send('invalid user');
+        queryUtils.methods.insertUserMasters(username,email,hash,role_name,req.body.tenant_name,function(ierr,result){
+            if(ierr){
+                logger.error(ierr.stack)
+                res.status(500).send('technical error occured');
+            }else{
+                res.send('done');
             }
         });
     } catch (e) {
         logger.error(e.stack);
-        res.status(500).send('technical error occured while preparing userActionForUserMaster service');
+        res.status(500).send('technical error occured');
     }
 });
 
