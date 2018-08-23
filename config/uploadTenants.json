@@ -1,0 +1,17 @@
+
+{
+	"tenants" : [{
+		"tenant_name" : "Tenant_1",
+		"status" : "Active",
+		"domain":"tenat1.com",
+		"cert":"./config/cert-store/tenant_1.pem"
+	},
+	{
+		"tenant_name" : "Tenant_2",
+		"status" : "Active",
+		"domain":"tenat1.com",
+		"cert":"./config/cert-store/tenant_2.pem"
+	}]
+}
+
+

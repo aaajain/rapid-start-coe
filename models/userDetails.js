@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+const mongoTenant = require('mongo-tenant');
+var settings = require('../config/settings.js');
 
 var userSchema = new mongoose.Schema({
   email: {
@@ -23,6 +25,11 @@ var userSchema = new mongoose.Schema({
   	required: true,
   }
 });
+
+if(settings.is_mt_required){
+    userSchema.plugin(mongoTenant);
+} 
+
 
 mongoose.model('user_master',userSchema);
 
