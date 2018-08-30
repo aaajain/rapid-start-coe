@@ -13,7 +13,7 @@ describe('test authorization', function () {
 		queryUtils['tenantData'] = [{tenant_name:'test',cert:'/test/path'}]
 	});
 	it('test if user was authorized', function (done) {
-		 AuthorizationHelper.auth({'user':'testUser','action':'create',tenant_name:'test',authToken:'test'},function(err,result){
+		 AuthorizationHelper.authorizeInterceptor({'user':'testUser','action':'create',tenant_name:'test',authToken:'test'},function(err,result){
 		 	assert.equal(result,true);
 		 });
 		 done();
@@ -32,7 +32,7 @@ describe('test authorization', function () {
 		queryUtils['tenantData'] = [{tenant_name:'test',cert:'/test/path'}]
 	});
 	it('test if user was not authorized, invalid role', function (done) {
-		 AuthorizationHelper.auth({'user':'testUser','action':'create',tenant_name:'test',authToken:'test'},function(err,result){
+		 AuthorizationHelper.authorizeInterceptor({'user':'testUser','action':'create',tenant_name:'test',authToken:'test'},function(err,result){
 		 	assert.equal(result,false);
 		 })
 		 done();
@@ -51,7 +51,7 @@ describe('test authorization', function () {
 		queryUtils['tenantData'] = [{tenant_name:'test',cert:'/test/path'}]
 	});
 	it('test if user was not authorised, invalid user', function (done) {
-		 AuthorizationHelper.auth({'user':'testUser','action':'create',tenant_name:'test',authToken:'test'},function(err,result){
+		 AuthorizationHelper.authorizeInterceptor({'user':'testUser','action':'create',tenant_name:'test',authToken:'test'},function(err,result){
 		 	assert.equal(result,false);
 		 })
 		 done();
@@ -71,7 +71,7 @@ describe('test authorization', function () {
 		queryUtils['tenantData'] = [{tenant_name:'test',cert:'/test/path'}]
 	});
 	it('test if err', function (done) {
-		 AuthorizationHelper.auth({'user':'testUser','action':'create',tenant_name:'test',authToken:'test'},function(err,result){
+		 AuthorizationHelper.authorizeInterceptor({'user':'testUser','action':'create',tenant_name:'test',authToken:'test'},function(err,result){
 		 	assert.equal(err,"test error");
 		 })
 		 done();
